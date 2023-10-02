@@ -1,3 +1,5 @@
+<!-- Copyright 2023 RADar-AZDelta -->
+<!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import type { IColumnMetaData } from '@radar-azdelta/svelte-datatable'
   import type { AutoCompleteEventDetail, ICustomConcept, IinputConfig } from '$lib/Types'

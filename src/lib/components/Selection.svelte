@@ -1,3 +1,5 @@
+<!-- Copyright 2023 RADar-AZDelta -->
+<!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import type { CustomOptionsEvents } from '$lib/Types'

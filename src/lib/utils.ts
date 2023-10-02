@@ -1,3 +1,5 @@
+//Copyright 2023 RADar-AZDelta
+//SPDX-License-Identifier: gpl3+
 import type { IPagination } from '@radar-azdelta/svelte-datatable'
 
 export function reformatDate(date: Date = new Date()) {

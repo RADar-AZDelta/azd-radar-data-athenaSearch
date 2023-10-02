@@ -1,3 +1,5 @@
+<!-- Copyright 2023 RADar-AZDelta -->
+<!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   //////////////////////////////////////////////// Framework imports
   import { createEventDispatcher } from 'svelte'
@@ -19,7 +21,7 @@
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import AthenaRow from '$lib/components/AthenaRow.svelte'
   import type {
-    CustomMappingEventDetail,
+    CustomRowCreationEventDetail,
     CustomOptionsEvents,
     IOptions,
     ICustomColumn,
@@ -146,7 +148,7 @@
   }
 
   // A method for custom mapping
-  function customMapping(e: CustomEvent<CustomMappingEventDetail>): void | string {
+  function customMapping(e: CustomEvent<CustomRowCreationEventDetail>): void | string {
     errorMessage = ''
     const domainKeys = Object.keys(customConceptInfo.domain_id)
     const domainValues = Object.values(customConceptInfo.domain_id)
@@ -158,7 +160,7 @@
     if (!classKeys.includes(e.detail.concept.conceptClassId) || !classValues.includes(e.detail.concept.conceptClassId))
       return (errorMessage = 'The concept class id is not valid')
 
-    dispatch('customMapping', { concept: e.detail.concept })
+    dispatch('customRowCreation', { concept: e.detail.concept })
   }
 
   async function getCustomColumnConfig() {
@@ -177,7 +179,6 @@
 
   async function selectionChanged(e: CustomEvent<SelectionChangedEventDetail>) {
     conceptSelection = e.detail.selection
-    console.log(conceptSelection)
   }
 
   let fetchDataFunc = fetchData
@@ -243,7 +244,15 @@
             dataTypeImpl: new AthenaDataTypeImpl(),
           }}
         >
-          <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected} custom={$$slots['action-athena']}>
+          <AthenaRow
+            slot="default"
+            let:renderedRow
+            let:columns
+            {renderedRow}
+            {columns}
+            dblClickAction={rowSelected}
+            custom={$$slots['action-athena']}
+          >
             <slot let:renderedRow {renderedRow} slot="action-athena" name="action-athena" />
           </AthenaRow>
         </DataTable>

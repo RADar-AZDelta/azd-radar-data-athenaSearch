@@ -1,12 +1,7 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
+//Copyright 2023 RADar-AZDelta
+//SPDX-License-Identifier: gpl3+
 declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface Platform {}
-	}
+	namespace App {}
 
 	namespace svelte.JSX {
 		interface HTMLAttributes {

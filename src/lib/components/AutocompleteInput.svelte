@@ -1,3 +1,5 @@
+<!-- Copyright 2023 RADar-AZDelta -->
+<!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import type { CustomOptionsEvents } from '../Types'
@@ -56,6 +58,10 @@
     filter()
     save()
   }, 300)
+
+  async function outClick() {
+    suggestionsFocus = false
+  }
 </script>
 
 <div data-name="autocomplete-input">
@@ -73,7 +79,7 @@
     }}
   />
   {#if list && filteredValues.size > 0 && (focus || suggestionsFocus)}
-    <ul use:clickOutside on:outClick={() => (suggestionsFocus = false)}>
+    <ul use:clickOutside on:outClick={outClick}>
       {#each [...filteredValues] as [key, value], i}
         {#if i < 7 && !autoCompleted}
           <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

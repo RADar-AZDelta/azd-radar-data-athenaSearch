@@ -1,3 +1,5 @@
+//Copyright 2023 RADar-AZDelta
+//SPDX-License-Identifier: gpl3+
 // A method to check if the user clicks outside of the element
 export function clickOutside(node: Node): {destroy(): void} {
 	const handleClick = (event: MouseEvent) => {

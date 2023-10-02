@@ -1,3 +1,5 @@
+//Copyright 2023 RADar-AZDelta
+//SPDX-License-Identifier: gpl3+
 export interface IOptions {
   altName: string
   altNameFacet: string
@@ -7,19 +9,6 @@ export interface IOptions {
 export interface IFilter {
   name: string
   opts: IOptions
-}
-
-export interface ICustomConcept {
-  conceptId: string
-  conceptName: string
-  domainId: string
-  vocabularyId: string
-  conceptClassId: string
-  standardConcept: string
-  conceptCode: string
-  validStartDate: string
-  validEndDate: string
-  invalidReason: string
 }
 
 export interface IinputConfig {
@@ -50,16 +39,10 @@ export interface ICustomColumn {
 // Events
 
 export interface CustomOptionsEvents {
-  mapConceptId: MapConceptIdEventDetail
   autoComplete: AutoCompleteEventDetail
-  customMapping: CustomMappingEventDetail
+  customRowCreation: CustomRowCreationEventDetail
   selectionChanged: SelectionChangedEventDetail
   rowSelected: RowSelectedEventDetail
-}
-
-export interface MapConceptIdEventDetail {
-  conceptId: string
-  conceptName: string
 }
 
 export interface AutoCompleteEventDetail {
@@ -68,7 +51,7 @@ export interface AutoCompleteEventDetail {
   key: string
 }
 
-export interface CustomMappingEventDetail {
+export interface CustomRowCreationEventDetail {
   concept: ICustomConcept
 }
 
