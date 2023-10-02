@@ -32,7 +32,6 @@
 
   export let filterAllColumns: boolean = true,
     sortOneColumn: boolean = true,
-    actionColumnAthena: boolean = false,
     actionColumnCustom: boolean = false
 
   // General variables
@@ -236,7 +235,7 @@
           {columns}
           options={{
             id: 'athena',
-            actionColumn: actionColumnAthena,
+            actionColumn: true,
             rowsPerPageOptions: [5, 10, 15, 20],
             globalFilter: filterAllColumns ? { column: 'all', filter: undefined } : undefined,
             saveOptions: false,
@@ -244,8 +243,8 @@
             dataTypeImpl: new AthenaDataTypeImpl(),
           }}
         >
-          <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected}>
-            <slot let:renderedRow {renderedRow} slot="action" name="action-athena" />
+          <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected} custom={$$slots['action-athena']}>
+            <slot let:renderedRow {renderedRow} slot="action-athena" name="action-athena" />
           </AthenaRow>
         </DataTable>
       </div>
