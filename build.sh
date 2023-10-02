@@ -4,4 +4,4 @@
 rm -fr ./package
 pnpm run prepublishOnly
 pnpm run package
-pnpm publish ./package
+pnpm publish
