@@ -1,6 +1,14 @@
 {
-	"name": "svelte-athena-search",
+	"name": "@radar-azdelta/svelte-athena-search",
 	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/RADar-AZDelta/svelte-Athena-search.git"
+	},
+	"homepage": "https://radar-azdelta.github.io/svelte-Athena-search/",
+	"publishConfig": {
+		"access": "public"
+	  },
 	"scripts": {
 		"dev": "vite dev --host=127.0.0.1",
 		"build": "vite build",
