@@ -6,14 +6,16 @@
   export let renderedRow: Record<string, any>, columns: IColumnMetaData[] | undefined, dblClickAction: Function
 
   function referToAthena(): void {
-    const referUrl = "https://athena.ohdsi.org/search-terms/terms/" + renderedRow.id
+    const referUrl = 'https://athena.ohdsi.org/search-terms/terms/' + renderedRow.id
     window.open(encodeURI(referUrl), '_blank')?.focus()
   }
 </script>
 
-<td data-name="actions">
-  <slot name="action" />
-  <button on:click={referToAthena}><SvgIcon href="{base}/icons.svg" id="link" width="16px" height="16px" /></button>
+<td data-name="actions-cell">
+  <div data-name="actions-grid">
+    <slot name="action" />
+    <button on:click={referToAthena}><SvgIcon href="{base}/icons.svg" id="link" width="16px" height="16px" /></button>
+  </div>
 </td>
 {#if columns}
   {#each columns || [] as column (column.id)}

@@ -18,13 +18,13 @@
     > (also created by us), that is a easy to use and fast table component.
   </p>
   <div class="container">
-    <Search filterAllColumns={true} />
+    <Search filterAllColumns={true} sortOneColumn={false} actionColumnCustom={false} />
   </div>
 </section>
 
 <style>
   .container {
-    width: 80vw;
+    margin: 1rem 1rem 1rem 0;
     height: 60vh;
     border: 1px solid lightgray;
     border-radius: 5px;

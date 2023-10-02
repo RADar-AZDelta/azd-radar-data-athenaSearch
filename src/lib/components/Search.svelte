@@ -29,7 +29,10 @@
   import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
   import { assembleAthenaURL, reformatDate } from '$lib/utils'
 
-  export let filterAllColumns: boolean = true
+  export let filterAllColumns: boolean = true,
+    sortOneColumn: boolean = true,
+    actionColumnAthena: boolean = true,
+    actionColumnCustom: boolean = true
 
   // General variables
   let facets: Record<string, any> | undefined = undefined
@@ -89,7 +92,12 @@
   ): Promise<{ totalRows: number; data: any[][] | any[] }> {
     let filter = filteredColumns.values().next().value
     const sort = sortedColumns.entries().next().value
-    const url = await assembleAthenaURL(mappingUrl, [], columnNames, filter, sort, pagination, false)
+    let apiFilters: string[] = []
+    for (let [filter, options] of activatedAthenaFilters) {
+      const substring = options.map(option => `&${filter}=${option}`).join()
+      if (!apiFilters.includes(substring)) apiFilters.push(substring.replaceAll(',', '&'))
+    }
+    const url = await assembleAthenaURL(mappingUrl, apiFilters, columnNames, filter, sort, pagination, false)
     const response = await fetch(url)
     const apiData = await response.json()
     // Save the facets to exclude filters later
@@ -172,6 +180,11 @@
   }
 
   let fetchDataFunc = fetchData
+
+  $: {
+    activatedAthenaFilters
+    fetchDataFunc = fetchData
+  }
 </script>
 
 <div data-name="athena-layout">
@@ -202,7 +215,7 @@
                   id={option}
                   type="checkbox"
                   checked={checkFilter(key, opt.altName, option)}
-                  on:change={e => updateAPIFilters(e, opt.altName, option)}
+                  on:click={e => updateAPIFilters(e, opt.altName, option)}
                 />
                 <label for={option}>{option.replaceAll('/', ' / ')}</label>
               {/if}
@@ -221,15 +234,17 @@
           {columns}
           options={{
             id: 'athena',
-            actionColumn: true,
+            actionColumn: actionColumnAthena,
             rowsPerPageOptions: [5, 10, 15, 20],
             globalFilter: filterAllColumns ? { column: 'all', filter: undefined } : undefined,
             saveOptions: false,
-            singleSort: true,
+            singleSort: sortOneColumn,
             dataTypeImpl: new AthenaDataTypeImpl(),
           }}
         >
-          <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected} />
+          <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected}>
+            <slot slot="action" name="action-athena" />
+          </AthenaRow>
         </DataTable>
       </div>
     {:else if conceptSelection === 'custom'}
@@ -239,9 +254,11 @@
           <DataTable
             data={[{}]}
             columns={customColumns}
-            options={{ actionColumn: true, id: 'createCustomConcepts', saveOptions: false }}
+            options={{ actionColumn: actionColumnCustom, id: 'createCustomConcepts', saveOptions: false }}
           >
-            <InputRow slot="default" let:columns {columns} data={config} on:customMappingInput={customMapping} />
+            <InputRow slot="default" let:columns {columns} data={config} on:customMappingInput={customMapping}>
+              <slot slot="action" name="action-custom-concept" />
+            </InputRow>
           </DataTable>
         {/await}
 
