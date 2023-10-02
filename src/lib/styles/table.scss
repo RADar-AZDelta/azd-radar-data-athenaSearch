@@ -1,0 +1,155 @@
+$neutral-xxx-light: #f6f6f6;
+$neutral-x-light: #d8d8d8;
+$neutral-xx-light: #e2e2e2;
+$neutral: #cecece;
+$neutral-x-dark: #c5c5c5;
+$neutral-xx-dark: #bbbbbb;
+
+$darkgray-xx-light: #636363;
+$darkgray-x-light: #595959;
+$darkgray: #4f4f4f;
+$darkgray-x-dark: #454545;
+$darkgray-xx-dark: #3b3b3b;
+
+$blue-xx-light: #9ed1e1;
+$blue-x-light: #8fcadd;
+$blue: #80c3d8;
+$blue-x-dark: #71bbd4;
+$blue-xx-dark: #62b4cf;
+
+$brightblue: #0094d3;
+$brightblue-x-dark: #0082ba;
+$brightblue-xx-dark: #0070a0;
+
+$font-size: 10px;
+
+:root {
+  --font-size: 10px;
+  --font-number: 10;
+}
+
+body {
+  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  input {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+
+div[data-component='svelte-datatable'] {
+  div[data-component='datatable-content'] {
+    max-width: none;
+    width: auto;
+    max-height: none;
+    overflow-y: hidden;
+
+    table {
+      colgroup {
+        col {
+          min-width: calc(var(--font-size) * 10);
+        }
+
+        col[data-name='col-action'] {
+          min-width: 120px;
+        }
+      }
+
+      thead {
+        tr[data-name='titles'] {
+          background-color: $neutral-xx-light;
+          th {
+            font-size: var(--font-size);
+            div[data-name='column-resize'] {
+              min-width: calc(9 * var(--font-size));
+              div[data-name='column-reposition'] {
+                display: flex;
+                align-items: center;
+
+                button {
+                  div {
+                    svg {
+                      transform: scale(calc(var(--font-number) / 16));
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          th[data-name='action-Column'] {
+            button {
+              svg {
+                transform: scale(calc(var(--font-number) / 16));
+              }
+            }
+          }
+        }
+
+        tr[data-name='filters'] {
+          background-color: $neutral-xx-light;
+          th {
+            min-width: calc(9 * var(--font-size));
+            div[data-name='column-filter'] {
+              input {
+                min-width: calc(6.5 * var(--font-size));
+                padding: 0;
+                font-size: var(--font-size);
+              }
+              button {
+                padding: calc(0.25 * var(--font-size));
+                width: min-content;
+                height: min-content;
+                svg {
+                  transform: scale(calc(var(--font-number) / 16));
+                }
+              }
+            }
+            button[data-name='show-filter-header'] {
+              border: none;
+              background-color: inherit;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td[data-name='actions-cell'] {
+            height: 100%;
+
+            div[data-name='actions-grid'] {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              height: max-content;
+              max-width: 100%;
+            }
+          }
+
+          td {
+            p {
+              white-space: normal;
+              font-size: var(--font-size);
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+
+            button {
+              padding: 0 calc(0.5 * var(--font-size));
+              font-size: var(--font-size);
+            }
+          }
+        }
+      }
+    }
+  }
+}
