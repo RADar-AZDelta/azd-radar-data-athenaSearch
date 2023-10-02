@@ -6,7 +6,7 @@
   export let renderedRow: Record<string, any>, columns: IColumnMetaData[] | undefined, dblClickAction: Function
 
   function referToAthena(): void {
-    const referUrl = import.meta.env.VITE_ATHENA_DETAIL + renderedRow.id
+    const referUrl = "https://athena.ohdsi.org/search-terms/terms/" + renderedRow.id
     window.open(encodeURI(referUrl), '_blank')?.focus()
   }
 </script>

@@ -5,22 +5,6 @@
 
   export let columns: IColumnMetaData[] | undefined, data: Record<string, IinputConfig>
 
-  const concept: Record<string, string> = {}
-
-  let mapped: ICustomConcept | undefined,
-    mappedButton: boolean = false
-
-  function checkRow() {
-    if (
-      mapped?.conceptName !== concept.concept_name ||
-      mapped?.domainId !== concept.domain_id ||
-      mapped?.vocabularyId !== concept.vocabulary_id ||
-      mapped?.conceptClassId !== concept.concept_class_id
-    )
-      mappedButton = false
-    else mappedButton = true
-  }
-
   async function saveToRow(e: CustomEvent<AutoCompleteEventDetail>) {
     data[e.detail.id].value = e.detail.value
   }

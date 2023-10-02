@@ -1,16 +1,12 @@
 <script lang="ts">
-  import type { ICategories, IFilter } from '$lib/Types'
-  import SvgIcon from './SvgIcon.svelte'
   import { base } from '$app/paths'
   import debounce from 'lodash.debounce'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
+  import type { IOptions, IFilter } from '$lib/Types'
 
-  export let filter: IFilter,
-    openedFilter: string,
-    color: string,
-    allowInput: boolean = true
-
+  export let filter: IFilter, openedFilter: string, color: string
   let filterInput: string,
-    filteredFilterOptions: ICategories = filter.categories
+    filteredFilterOptions: IOptions = filter.opts
 
   // A method for when the input (search for a filter) has changed
   const onChange = debounce(async (e: any): Promise<void> => {
@@ -19,22 +15,22 @@
 
   // A method to change the section that needs to be opened
   const showCategories = async (): Promise<void> => {
-    openedFilter = openedFilter == filter.name ? '' : filter.name
+    openedFilter = openedFilter === filter.name ? '' : filter.name
   }
 
   // A method to remove the criteria from the input field to search for a filter
   const removeInputFromFilter = async (): Promise<void> => {
     filterInput = ''
-    filteredFilterOptions = filter.categories
+    filteredFilterOptions = filter.opts
   }
 
   // A method to update the filters with a certain criteria
   const updateOptionsFromFilter = async (input: string): Promise<void> => {
-    const options = filter.categories.options.filter(op => op.toLowerCase().includes(input.toLowerCase()))
+    const options = filter.opts.options.filter(op => op.toLowerCase().includes(input.toLowerCase()))
     filteredFilterOptions = {
       options: options,
-      altName: filter.categories.altName,
-      altNameFacet: filter.categories.altNameFacet,
+      altName: filter.opts.altName,
+      altNameFacet: filter.opts.altNameFacet,
     }
   }
 </script>
@@ -43,31 +39,25 @@
   <button title="Open filter {filter.name}" data-name="filter-button" on:click={showCategories}>
     <div data-name="filter-name">
       <span data-name="filter-color" style={`background-color: ${color};`} />
-      {#if filter.name !== 'Vocab'}
-        <p>{filter.name}</p>
-      {:else}
-        <p>{filter.categories.altName}</p>
-      {/if}
+      <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
     </div>
     <SvgIcon href="{base}/icons.svg" id="updown" width="16px" height="16px" />
   </button>
   {#if openedFilter == filter.name}
     <div data-name="filter-item">
-      {#if allowInput == true}
-        <div data-name="filter-input">
-          <input
-            type="text"
-            title="Search for filter"
-            placeholder="Filter"
-            data-name={filter.name}
-            bind:value={filterInput}
-            on:input={onChange}
-          />
-          <button title="Remove input filter" on:click={removeInputFromFilter}>
-            <SvgIcon href="{base}/icons.svg" id="x" height="16px" width="16px" />
-          </button>
-        </div>
-      {/if}
+      <div data-name="filter-input">
+        <input
+          type="text"
+          title="Search for filter"
+          placeholder="Filter"
+          data-name={filter.name}
+          bind:value={filterInput}
+          on:input={onChange}
+        />
+        <button title="Remove input filter" on:click={removeInputFromFilter}>
+          <SvgIcon href="{base}/icons.svg" id="x" height="16px" width="16px" />
+        </button>
+      </div>
       {#each filteredFilterOptions.options as option}
         <slot name="option" {option} />
       {/each}

@@ -1,4 +1,4 @@
-export interface ICategories {
+export interface IOptions {
   altName: string
   altNameFacet: string
   options: string[]
@@ -6,7 +6,7 @@ export interface ICategories {
 
 export interface IFilter {
   name: string
-  categories: ICategories
+  opts: IOptions
 }
 
 export interface ICustomConcept {
@@ -41,12 +41,19 @@ export interface ICustomConcept {
   invalidReason: string
 }
 
+export interface ICustomColumn {
+  id: string
+  label?: string
+  value?: string
+}
+
 // Events
 
 export interface CustomOptionsEvents {
   mapConceptId: MapConceptIdEventDetail
   autoComplete: AutoCompleteEventDetail
   customMapping: CustomMappingEventDetail
+  selectionChanged: SelectionChangedEventDetail
 }
 
 export interface MapConceptIdEventDetail {
@@ -62,4 +69,8 @@ export interface AutoCompleteEventDetail {
 
 export interface CustomMappingEventDetail {
   concept: ICustomConcept
+}
+
+export interface SelectionChangedEventDetail {
+  selection: string
 }

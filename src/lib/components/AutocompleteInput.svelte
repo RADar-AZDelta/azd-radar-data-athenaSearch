@@ -8,7 +8,7 @@
     list: Record<string, any> | undefined = undefined,
     initial: string | undefined = undefined
 
-  let inputValue: string | null = initial ? initial : '',
+  let inputValue: string | null | undefined = initial ? initial : undefined,
     value: any,
     key: string,
     filteredValues: Map<string, any> = new Map(),

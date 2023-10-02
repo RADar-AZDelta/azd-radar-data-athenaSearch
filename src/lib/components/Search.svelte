@@ -1,60 +1,47 @@
 <script lang="ts">
   //////////////////////////////////////////////// Framework imports
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher } from 'svelte'
   import { base } from '$app/paths'
   //////////////////////////////////////////////// Package imports
-  import DataTable, {
-    type FetchDataFunc,
-    type IColumnMetaData,
-    type IPagination,
-    type SortDirection,
-    type TFilter,
-  } from '@radar-azdelta/svelte-datatable'
+  import DataTable from '@radar-azdelta/svelte-datatable'
+  import type { IPagination, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
   //////////////////////////////////////////////// config
   import filters from '$lib/config/filters.json'
   import customColumns from '$lib/config/customColumns.json'
+  import columns from '$lib/config/columnsAthena.json'
   import suggestions from '$lib/config/suggestions.json'
-  import columns from '$lib/config/columnNames.json'
+  import columnNames from '$lib/config/columnNames.json'
+  import customConceptInfo from '$lib/config/suggestions.json'
   //////////////////////////////////////////////// Component & type imports
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
+  import Selection from '$lib/components/Selection.svelte'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
+  import AthenaRow from '$lib/components/AthenaRow.svelte'
   import type {
     CustomMappingEventDetail,
     CustomOptionsEvents,
-    ICategories,
+    IOptions,
+    ICustomColumn,
     IinputConfig,
-    MapConceptIdEventDetail,
-  } from '../Types'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import AthenaRow from '$lib/components/AthenaRow.svelte'
-  import customConceptInfo from '$lib/config/suggestions.json'
+    SelectionChangedEventDetail,
+  } from '$lib/Types'
   import InputRow from '$lib/components/InputRow.svelte'
   import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
   import { assembleAthenaURL, reformatDate } from '$lib/utils'
 
-  export let facets: Record<string, any> | undefined = undefined,
-    globalFilter: { column: string; filter: string | undefined } | undefined = undefined
-
-  const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
-
-  const inputAvailableColumns = ['code', 'name', 'className', 'domain', 'vocabulary']
-  const customRow: Record<string, IinputConfig> = {}
-  for (let col of customColumns) {
-    const name = col.label ? col.label : col.id
-    customRow[name] = {
-      inputAvailable: inputAvailableColumns.includes(name),
-      value: col.value === 'date' ? reformatDate() : col.value ? col.value : '',
-      suggestions: (<Record<string, any>>suggestions)[col.id],
-    }
-  }
+  export let filterAllColumns: boolean = true
 
   // General variables
+  let facets: Record<string, any> | undefined = undefined
+  const inputAvailableColumns = ['code', 'name', 'className', 'domain', 'vocabulary']
+  const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
   let openedFilter: string,
     conceptSelection: string = 'athena',
     errorMessage: string = ''
 
   // Data variables
-  let JSONFilters = new Map<string, ICategories>([]),
+  let JSONFilters = new Map<string, IOptions>([]),
     activatedAthenaFilters = new Map<string, string[]>([['standardConcept', ['Standard']]]),
     filterColors: Record<string, string> = {
       domain: '#ec3d31',
@@ -74,11 +61,6 @@
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // DATA
   ///////////////////////////////////////////////////////////////////////////////////////////////
-
-  const athenaColumns: IColumnMetaData[] = customColumns
-
-  let dataTableAthena: DataTable,
-    customConceptData: Record<string, any>[] = [{}]
 
   for (let filter of filters) {
     JSONFilters.set(filter.name, {
@@ -104,19 +86,10 @@
     filteredColumns: Map<String, TFilter>,
     sortedColumns: Map<string, SortDirection>,
     pagination: IPagination
-  ) {
-    // Get the filter
+  ): Promise<{ totalRows: number; data: any[][] | any[] }> {
     let filter = filteredColumns.values().next().value
-
-    const url = await assembleAthenaURL(
-      mappingUrl,
-      [],
-      columns,
-      filter,
-      sortedColumns.entries().next().value,
-      pagination,
-      false
-    )
+    const sort = sortedColumns.entries().next().value
+    const url = await assembleAthenaURL(mappingUrl, [], columnNames, filter, sort, pagination, false)
     const response = await fetch(url)
     const apiData = await response.json()
     // Save the facets to exclude filters later
@@ -132,11 +105,11 @@
     let chosenFilter = activatedAthenaFilters.get(filter)
     const inputValue = (event.target as HTMLInputElement).checked
     // If the filter is checked, add it
-    if (chosenFilter && inputValue == true) chosenFilter.push(option)
-    else if (chosenFilter && !inputValue && chosenFilter?.includes(option)) {
+    if (chosenFilter && inputValue) chosenFilter.push(option)
+    else if (chosenFilter && !inputValue && chosenFilter.includes(option)) {
       // If the filter is unchecked and was already in the list, remove it
       chosenFilter.splice(chosenFilter.indexOf(option), 1)
-      if (chosenFilter.length == 0) activatedAthenaFilters.delete(filter)
+      if (!chosenFilter.length) activatedAthenaFilters.delete(filter)
       else activatedAthenaFilters.set(filter, chosenFilter)
     } else activatedAthenaFilters.set(filter, [option])
     activatedAthenaFilters = activatedAthenaFilters
@@ -147,7 +120,7 @@
   }
 
   // A method to check if the filter is already applied to the API call
-  const checkIfFilterExists = (filter: string, altName: string | undefined, option: string): boolean => {
+  function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     let allFilters: Map<string, string[]> = activatedAthenaFilters
     const chosenFilter = !allFilters.get(filter)
       ? altName
@@ -179,39 +152,31 @@
 
     dispatch('customMapping', { concept: e.detail.concept })
   }
+
+  async function getCustomColumnConfig() {
+    const config: Record<string, IinputConfig> = {}
+    for (let col of customColumns) {
+      const name = col.label ? col.label : col.id
+      const columnConfig: ICustomColumn[] = customColumns.filter(col => col.id === name || col.label === name)
+      config[col.id] = {
+        inputAvailable: inputAvailableColumns.includes(name),
+        value: columnConfig[0].value === 'date' ? reformatDate() : columnConfig[0].value ? columnConfig[0].value : '',
+        suggestions: (<Record<string, any>>suggestions)[columnConfig[0].id],
+      }
+    }
+    return config
+  }
+
+  async function selectionChanged(e: CustomEvent<SelectionChangedEventDetail>) {
+    conceptSelection = e.detail.selection
+  }
+
+  let fetchDataFunc = fetchData
 </script>
 
 <div data-name="athena-layout">
   <section data-name="filters-container">
     <div data-name="filters">
-      {#each [...JSONFilters] as [key, options]}
-        {#if facets}
-          {#if facets[options.altNameFacet]}
-            <AthenaFilter
-              filter={{ name: key, categories: options }}
-              bind:openedFilter
-              allowInput={true}
-              color={filterColors[key.toLowerCase()]}
-            >
-              <div slot="option" data-name="filter-option" let:option>
-                {#if facets[options.altNameFacet].hasOwnProperty(option) && facets[options.altNameFacet][option] > 0}
-                  <input
-                    id={option}
-                    type="checkbox"
-                    title="Activate/deactivate filter"
-                    checked={checkIfFilterExists(key, options.altName, option)}
-                    on:change={() =>
-                      event != undefined
-                        ? updateAPIFilters(event, options.altName != undefined ? options.altName : 'sourceName', option)
-                        : null}
-                  />
-                  <label for={option}>{option.replaceAll('/', ' / ')}</label>
-                {/if}
-              </div>
-            </AthenaFilter>
-          {/if}
-        {/if}
-      {/each}
       <div data-name="activated-filters">
         {#each [...activatedAthenaFilters] as [filter, values]}
           {#each values as value}
@@ -228,34 +193,41 @@
           {/each}
         {/each}
       </div>
+      {#each [...JSONFilters] as [key, opt]}
+        {#if facets && facets[opt.altNameFacet]}
+          <AthenaFilter filter={{ name: key, opts: opt }} bind:openedFilter color={filterColors[key.toLowerCase()]}>
+            <div slot="option" data-name="filter-option" let:option>
+              {#if facets[opt.altNameFacet].hasOwnProperty(option) && facets[opt.altNameFacet][option] > 0}
+                <input
+                  id={option}
+                  type="checkbox"
+                  checked={checkFilter(key, opt.altName, option)}
+                  on:change={e => updateAPIFilters(e, opt.altName, option)}
+                />
+                <label for={option}>{option.replaceAll('/', ' / ')}</label>
+              {/if}
+            </div>
+          </AthenaFilter>
+        {/if}
+      {/each}
     </div>
   </section>
-  <section data-name="table-pop-up">
-    <div data-name="concept-choice">
-      <button>
-        <input type="radio" bind:group={conceptSelection} id="athena" name="concept-type" value="athena" />
-        <label for="athena">Athena concepts</label>
-      </button>
-      <button>
-        <input type="radio" bind:group={conceptSelection} id="custom" name="concept-type" value="custom" />
-        <label for="custom">Custom concept</label>
-      </button>
-    </div>
+  <section data-name="athena-table">
+    <Selection on:selectionChanged={selectionChanged} />
     {#if conceptSelection === 'athena'}
       <div data-name="table-container">
         <DataTable
-          data={fetchData}
-          columns={athenaColumns}
+          data={fetchDataFunc}
+          {columns}
           options={{
             id: 'athena',
             actionColumn: true,
             rowsPerPageOptions: [5, 10, 15, 20],
-            globalFilter: globalFilter,
+            globalFilter: filterAllColumns ? { column: 'all', filter: undefined } : undefined,
             saveOptions: false,
             singleSort: true,
             dataTypeImpl: new AthenaDataTypeImpl(),
           }}
-          bind:this={dataTableAthena}
         >
           <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected} />
         </DataTable>
@@ -263,13 +235,15 @@
     {:else if conceptSelection === 'custom'}
       <div data-name="custom-concept-container">
         <h2>Create a custom concept</h2>
-        <DataTable
-          data={customConceptData}
-          columns={customColumns}
-          options={{ actionColumn: true, id: 'createCustomConcepts', saveOptions: false }}
-        >
-          <InputRow slot="default" let:columns {columns} data={customRow} on:customMappingInput={customMapping} />
-        </DataTable>
+        {#await getCustomColumnConfig() then config}
+          <DataTable
+            data={[{}]}
+            columns={customColumns}
+            options={{ actionColumn: true, id: 'createCustomConcepts', saveOptions: false }}
+          >
+            <InputRow slot="default" let:columns {columns} data={config} on:customMappingInput={customMapping} />
+          </DataTable>
+        {/await}
 
         {#if errorMessage}
           <div data-name="errormessage">
