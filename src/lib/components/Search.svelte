@@ -32,9 +32,7 @@
   import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
   import { assembleAthenaURL, reformatDate } from '$lib/utils'
 
-  export let filterAllColumns: boolean = true,
-    sortOneColumn: boolean = true,
-    actionColumnCustom: boolean = false
+  export let actionColumnCustom: boolean = false
 
   // General variables
   let facets: Record<string, any> | undefined = undefined
@@ -238,9 +236,9 @@
             id: 'athena',
             actionColumn: true,
             rowsPerPageOptions: [5, 10, 15, 20],
-            globalFilter: filterAllColumns ? { column: 'all', filter: undefined } : undefined,
+            globalFilter: { column: 'all', filter: undefined },
             saveOptions: false,
-            singleSort: sortOneColumn,
+            singleSort: true,
             dataTypeImpl: new AthenaDataTypeImpl(),
           }}
         >

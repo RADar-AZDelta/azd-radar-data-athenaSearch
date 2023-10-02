@@ -24,7 +24,7 @@
   <p>Selected Row: {JSON.stringify(selected)}</p>
 
   <div class="container">
-    <Search filterAllColumns={true} sortOneColumn={false} actionColumnCustom={true}>
+    <Search actionColumnCustom={true}>
       <button slot="action-athena" let:renderedRow on:click={() => showConcept(renderedRow)}>Action</button>
       <button slot="action-custom-concept" let:renderedRow on:click={() => showConcept(renderedRow)}>Action</button>
     </Search>
