@@ -11,6 +11,9 @@ const config = {
 		adapter: adapter(),
 		paths: {
 			base: dev ? '' : '/svelte-Athena-search'
+		},
+		prerender: {
+			handleHttpError: 'warn'
 		}
 	}
 };
