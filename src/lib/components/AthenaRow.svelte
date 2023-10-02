@@ -12,10 +12,13 @@
 </script>
 
 <td data-name="actions-cell">
-  <div data-name="actions-grid">
-    <slot name="action" />
-    <button on:click={referToAthena}><SvgIcon href="{base}/icons.svg" id="link" width="16px" height="16px" /></button>
-  </div>
+  {#if $$slots.action}
+    <slot name="action" {renderedRow} />
+  {:else}
+    <div data-name="actions-grid">
+      <button on:click={referToAthena}><SvgIcon href="{base}/icons.svg" id="link" width="16px" height="16px" /></button>
+    </div>
+  {/if}
 </td>
 {#if columns}
   {#each columns || [] as column (column.id)}

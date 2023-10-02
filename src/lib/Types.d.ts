@@ -54,6 +54,7 @@ export interface CustomOptionsEvents {
   autoComplete: AutoCompleteEventDetail
   customMapping: CustomMappingEventDetail
   selectionChanged: SelectionChangedEventDetail
+  rowSelected: RowSelectedEventDetail
 }
 
 export interface MapConceptIdEventDetail {
@@ -73,4 +74,8 @@ export interface CustomMappingEventDetail {
 
 export interface SelectionChangedEventDetail {
   selection: string
+}
+
+export interface RowSelectedEventDetail {
+  row: Record<string, any>
 }

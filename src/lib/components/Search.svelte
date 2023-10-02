@@ -5,6 +5,7 @@
   //////////////////////////////////////////////// Package imports
   import DataTable from '@radar-azdelta/svelte-datatable'
   import type { IPagination, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
+  import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
   //////////////////////////////////////////////// config
   import filters from '$lib/config/filters.json'
   import customColumns from '$lib/config/customColumns.json'
@@ -31,8 +32,8 @@
 
   export let filterAllColumns: boolean = true,
     sortOneColumn: boolean = true,
-    actionColumnAthena: boolean = true,
-    actionColumnCustom: boolean = true
+    actionColumnAthena: boolean = false,
+    actionColumnCustom: boolean = false
 
   // General variables
   let facets: Record<string, any> | undefined = undefined
@@ -78,7 +79,7 @@
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   function rowSelected(row: Record<string, any>): void {
-    console.log('SELECTED ROW ', row)
+    dispatch('rowSelected', { row })
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +178,7 @@
 
   async function selectionChanged(e: CustomEvent<SelectionChangedEventDetail>) {
     conceptSelection = e.detail.selection
+    console.log(conceptSelection)
   }
 
   let fetchDataFunc = fetchData
@@ -243,7 +245,7 @@
           }}
         >
           <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected}>
-            <slot slot="action" name="action-athena" />
+            <slot let:renderedRow {renderedRow} slot="action" name="action-athena" />
           </AthenaRow>
         </DataTable>
       </div>
@@ -257,7 +259,7 @@
             options={{ actionColumn: actionColumnCustom, id: 'createCustomConcepts', saveOptions: false }}
           >
             <InputRow slot="default" let:columns {columns} data={config} on:customMappingInput={customMapping}>
-              <slot slot="action" name="action-custom-concept" />
+              <slot let:result renderedRow={result} slot="action" name="action-custom-concept" />
             </InputRow>
           </DataTable>
         {/await}

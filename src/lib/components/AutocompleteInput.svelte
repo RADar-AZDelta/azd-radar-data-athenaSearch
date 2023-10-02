@@ -55,7 +55,7 @@
     inputValue = e.target.value
     filter()
     save()
-  }, 1000)
+  }, 300)
 </script>
 
 <div data-name="autocomplete-input">

@@ -5,19 +5,24 @@
 
   export let columns: IColumnMetaData[] | undefined, data: Record<string, IinputConfig>
 
+  let convertedRow: Record<string, string> = {}
+
   async function saveToRow(e: CustomEvent<AutoCompleteEventDetail>) {
     data[e.detail.id].value = e.detail.value
   }
 
-  function convertResult(): Record<string, any> {
-    const obj: Record<string, string> = {}
-    for (let item of Object.entries(data)) obj[item[0]] = item[1].value
-    return obj
+  function convertResult(): void {
+    for (let item of Object.entries(data)) convertedRow[item[0]] = item[1].value
+  }
+
+  $: {
+    data
+    convertResult()
   }
 </script>
 
 {#if columns}
-  <slot name="action" result={convertResult()} />
+  <slot name="action" result={convertedRow} />
   {#each columns || [] as column (column.id)}
     <td>
       <div data-name="cell-container">

@@ -1,6 +1,5 @@
 <script lang="ts">
   import Search from '$lib/components/Search.svelte'
-  import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 </script>
 
 <svelte:head>
@@ -16,10 +15,14 @@
     of the webtool from Athena so that the users will have a familiar experience. It uses the <a
       href="https://www.npmjs.com/package/@radar-azdelta/svelte-datatable">svelte-datatable package</a
     > (also created by us), that is a easy to use and fast table component.
+
+    This example shows a no config search component.
   </p>
   <div class="container">
-    <Search filterAllColumns={true} sortOneColumn={false} actionColumnCustom={false} />
+    <Search />
   </div>
+
+  <a href="/actions">Another example with custom actions</a>
 </section>
 
 <style>
