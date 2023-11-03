@@ -1,9 +1,8 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
-import { dev } from "$app/environment"
+import type { IDataTypeFunctionalities, IDataTypeInfo, IRender } from "../Types.d.ts"
 import type { TFilter } from "@radar-azdelta/svelte-datatable"
-import type { IDataTypeInfo } from "@radar-azdelta/svelte-datatable/components/DataTable"
-import type { FetchDataFunc, IColumnMetaData, IDataTypeFunctionalities, IRender, SortDirection } from "@radar-azdelta/svelte-datatable/components/DataTable"
+import type { FetchDataFunc, IColumnMetaData, SortDirection } from "@radar-azdelta/svelte-datatable"
 import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable/components/datatable/data/DataTypeCommonBase'
 
 
@@ -35,12 +34,7 @@ export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeF
       if (cur && cur.sortDirection) acc.set(cur.id, cur.sortDirection)
       return acc
     }, new Map<string, SortDirection>())
-    if (dev) start = performance.now()
     const results = await (this.data as FetchDataFunc)(filteredColumns, sortedColumns, this.internalOptions!)
-    if (dev) {
-      const end = performance.now()
-      console.log(`DataTable: fetchData function took: ${Math.round(end - start!)} ms`)
-    }
     const originalIndices = Array.from({ length: results.data.length }, (_, i) => i)
     const totalRows = results.totalRows
     this.renderedData = results.data

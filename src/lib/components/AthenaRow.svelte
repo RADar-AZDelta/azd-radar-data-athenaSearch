@@ -1,7 +1,6 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import { base } from '$app/paths'
   import type { IColumnMetaData } from '@radar-azdelta/svelte-datatable'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
 
@@ -21,7 +20,7 @@
     <slot name="action-athena" {renderedRow} />
   {:else}
     <div data-name="actions-grid">
-      <button on:click={referToAthena}><SvgIcon href="{base}/icons.svg" id="link" width="16px" height="16px" /></button>
+      <button on:click={referToAthena}><SvgIcon href="/icons.svg" id="link" width="16px" height="16px" /></button>
     </div>
   {/if}
 </td>

@@ -1,10 +1,9 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import { base } from '$app/paths'
-  import debounce from 'lodash.debounce'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import type { IOptions, IFilter } from '$lib/Types'
+  import debounce from 'lodash.debounce/index.js'
+  import SvgIcon from '../components/SvgIcon.svelte'
+  import type { IOptions, IFilter } from '../Types.d.ts'
 
   export let filter: IFilter, openedFilter: string, color: string
   let filterInput: string,
@@ -43,7 +42,7 @@
       <span data-name="filter-color" style={`background-color: ${color};`} />
       <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
     </div>
-    <SvgIcon href="{base}/icons.svg" id="updown" width="16px" height="16px" />
+    <SvgIcon href="/icons.svg" id="updown" width="16px" height="16px" />
   </button>
   {#if openedFilter == filter.name}
     <div data-name="filter-item">
@@ -57,7 +56,7 @@
           on:input={onChange}
         />
         <button title="Remove input filter" on:click={removeInputFromFilter}>
-          <SvgIcon href="{base}/icons.svg" id="x" height="16px" width="16px" />
+          <SvgIcon href="/icons.svg" id="x" height="16px" width="16px" />
         </button>
       </div>
       {#each filteredFilterOptions.options as option}

@@ -3,23 +3,22 @@
 <script lang="ts">
   //////////////////////////////////////////////// Framework imports
   import { createEventDispatcher } from 'svelte'
-  import { base } from '$app/paths'
   //////////////////////////////////////////////// Package imports
   import DataTable from '@radar-azdelta/svelte-datatable'
   import type { IPagination, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
   //////////////////////////////////////////////// config
-  import filters from '$lib/config/filters.json'
-  import customColumns from '$lib/config/customColumns.json'
-  import columns from '$lib/config/columnsAthena.json'
-  import suggestions from '$lib/config/suggestions.json'
-  import columnNames from '$lib/config/columnNames.json'
-  import customConceptInfo from '$lib/config/suggestions.json'
+  import filters from '../config/filters.json'
+  import customColumns from '../config/customColumns.json'
+  import columns from '../config/columnsAthena.json'
+  import suggestions from '../config/suggestions.json'
+  import columnNames from '../config/columnNames.json'
+  import customConceptInfo from '../config/suggestions.json'
   //////////////////////////////////////////////// Component & type imports
-  import AthenaFilter from '$lib/components/AthenaFilter.svelte'
-  import Selection from '$lib/components/Selection.svelte'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import AthenaRow from '$lib/components/AthenaRow.svelte'
+  import AthenaFilter from '../components/AthenaFilter.svelte'
+  import Selection from '../components/Selection.svelte'
+  import SvgIcon from '../components/SvgIcon.svelte'
+  import AthenaRow from '../components/AthenaRow.svelte'
   import type {
     CustomRowCreationEventDetail,
     CustomOptionsEvents,
@@ -27,10 +26,10 @@
     ICustomColumn,
     IinputConfig,
     SelectionChangedEventDetail,
-  } from '$lib/Types'
-  import InputRow from '$lib/components/InputRow.svelte'
-  import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
-  import { assembleAthenaURL, reformatDate } from '$lib/utils'
+  } from '../Types.d.ts'
+  import InputRow from '../components/InputRow.svelte'
+  import { AthenaDataTypeImpl } from '../utilClasses/AthenaDataTypeImpl.ts'
+  import { assembleAthenaURL, reformatDate } from '../utils.ts'
 
   export let actionColumnCustom: boolean = false
 
@@ -199,7 +198,7 @@
               style={`background-color: ${filterColors[filterNames[filter]]}`}
             >
               <button on:click={() => removeFilter(filter, value)}>
-                <SvgIcon href="{base}/icons.svg" id="x" width="16px" height="16px" />
+                <SvgIcon href="/icons.svg" id="x" width="16px" height="16px" />
               </button>
               <p>{value}</p>
             </div>
@@ -276,7 +275,7 @@
             <button
               on:click={() => {
                 errorMessage = ''
-              }}><SvgIcon href="{base}/icons.svg" id="x" width="16px" height="16px" /></button
+              }}><SvgIcon href="/icons.svg" id="x" width="16px" height="16px" /></button
             >
           </div>
         {/if}

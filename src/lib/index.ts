@@ -1,9 +1,9 @@
-import { default as Search } from '$lib/components/Search.svelte'
+import { default as Search } from './components/Search.svelte'
 import type {
     RowSelectedEventDetail,
     CustomRowCreationEventDetail,
     ICustomConcept
-} from '$lib/Types'
+} from './Types.d.ts'
 
 export {
     Search as default,

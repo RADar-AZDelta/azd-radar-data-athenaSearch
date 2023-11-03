@@ -62,3 +62,39 @@ export interface SelectionChangedEventDetail {
 export interface RowSelectedEventDetail {
   row: Record<string, any>
 }
+
+export interface IDataTypeInfo {
+  data: any[] | any[][] | FetchDataFunc | File | undefined
+  internalOptions: ITableOptions
+  internalColumns: IColumnMetaData[] | undefined
+  renderedData: any[] | any[][] | undefined
+  modifyColumnMetadata?: ModifyColumnMetadataFunc
+}
+
+export interface IDataTypeFunctionalities {
+  render(onlyPaginationChanged: boolean): Promise<IRender>
+  saveToFile(): Promise<void>
+  getBlob(): Promise<Blob>
+  replaceValuesOfColumn(currentValue: any, updatedValue: any, column: string): Promise<void>
+  executeExpressionsAndReturnResults(expressions: Record<string, any>): Promise<any>
+  executeQueryAndReturnResults(query: Query | object): Promise<any>
+  getFullRow(originalIndex: number): Promise<Record<string, any> | void>
+  insertRows(rows: Record<string, any>[]): Promise<number[] | void>
+  updateRows(rowsToUpdateByOriginalIndex: Map<number, Record<string, any>>): Promise<void>
+  renameColumns(columns: Record<string, string>): Promise<void>
+  applyFilter(data: any[] | any[][]): Promise<any[] | any[][] | void>
+  applySort(data: any[] | any[][]): Promise<any[] | any[][] | void>
+  setData(data: IDataTypeInfo): Promise<void>
+  setInternalColumns(columns: IColumnMetaData[] | undefined): Promise<IColumnMetaData[]>
+  applyPagination(internalOptions: ITableOptions, data: any[] | any[][]): Promise<any[] | any[][] | undefined>
+  insertColumns(cols: IColumnMetaData[]): Promise<IColumnMetaData[] | void>
+  deleteRows(originalIndices: number[]): Promise<void>
+  destroy(): Promise<void>
+}
+
+export interface IRender {
+  renderedData: any[] | any[][] | undefined
+  originalIndices: number[]
+  totalRows?: number
+  internalColumns: IColumnMetaData[] | undefined
+}
