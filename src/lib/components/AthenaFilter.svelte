@@ -1,9 +1,9 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import debounce from 'lodash.debounce/index.js'
-  import SvgIcon from '../components/SvgIcon.svelte'
-  import type { IOptions, IFilter } from '../Types.d.ts'
+  import debounce from 'lodash.debounce'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
+  import type { IOptions, IFilter } from '$lib/Types'
 
   export let filter: IFilter, openedFilter: string, color: string
   let filterInput: string,

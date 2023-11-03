@@ -2,9 +2,9 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import debounce from 'lodash.debounce/index.js'
-  import type { CustomOptionsEvents } from '../Types.d.ts'
-  import { clickOutside } from '../actions/clickOutside.ts'
+  import debounce from 'lodash.debounce'
+  import type { CustomOptionsEvents } from '$lib/Types'
+  import { clickOutside } from '$lib/actions/clickOutside'
 
   export let id: string,
     list: Record<string, any> | undefined = undefined,

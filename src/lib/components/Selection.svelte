@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import type { CustomOptionsEvents } from '../Types.d.ts'
+  import type { CustomOptionsEvents } from '$lib/Types'
 
   let conceptSelection: string = 'athena'
 

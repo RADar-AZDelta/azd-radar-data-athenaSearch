@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import type { IColumnMetaData } from '@radar-azdelta/svelte-datatable'
-  import type { AutoCompleteEventDetail, IinputConfig } from '../Types.d.ts'
+  import type { AutoCompleteEventDetail, IinputConfig } from '$lib/Types'
   import AutocompleteInput from '$lib/components/AutocompleteInput.svelte'
 
   export let columns: IColumnMetaData[] | undefined, data: Record<string, IinputConfig>

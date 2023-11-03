@@ -1,8 +1,8 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
-import type { IDataTypeFunctionalities, IDataTypeInfo, IRender } from "../Types.d.ts"
 import type { TFilter } from "@radar-azdelta/svelte-datatable"
-import type { FetchDataFunc, IColumnMetaData, SortDirection } from "@radar-azdelta/svelte-datatable"
+import type { IDataTypeInfo } from "@radar-azdelta/svelte-datatable/components/DataTable"
+import type { FetchDataFunc, IColumnMetaData, IDataTypeFunctionalities, IRender, SortDirection } from "@radar-azdelta/svelte-datatable/components/DataTable"
 import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable/components/datatable/data/DataTypeCommonBase'
 
 

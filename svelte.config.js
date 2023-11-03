@@ -15,7 +15,8 @@ const config = {
 		prerender: {
 			handleHttpError: 'warn'
 		}
-	}
+	},
+	package: {}
 };
 
 export default config;

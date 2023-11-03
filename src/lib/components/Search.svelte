@@ -8,17 +8,17 @@
   import type { IPagination, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
   //////////////////////////////////////////////// config
-  import filters from '../config/filters.json'
-  import customColumns from '../config/customColumns.json'
-  import columns from '../config/columnsAthena.json'
-  import suggestions from '../config/suggestions.json'
-  import columnNames from '../config/columnNames.json'
-  import customConceptInfo from '../config/suggestions.json'
+  import filters from '$lib/config/filters.json'
+  import customColumns from '$lib/config/customColumns.json'
+  import columns from '$lib/config/columnsAthena.json'
+  import suggestions from '$lib/config/suggestions.json'
+  import columnNames from '$lib/config/columnNames.json'
+  import customConceptInfo from '$lib/config/suggestions.json'
   //////////////////////////////////////////////// Component & type imports
-  import AthenaFilter from '../components/AthenaFilter.svelte'
-  import Selection from '../components/Selection.svelte'
-  import SvgIcon from '../components/SvgIcon.svelte'
-  import AthenaRow from '../components/AthenaRow.svelte'
+  import AthenaFilter from '$lib/components/AthenaFilter.svelte'
+  import Selection from '$lib/components/Selection.svelte'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
+  import AthenaRow from '$lib/components/AthenaRow.svelte'
   import type {
     CustomRowCreationEventDetail,
     CustomOptionsEvents,
@@ -26,10 +26,10 @@
     ICustomColumn,
     IinputConfig,
     SelectionChangedEventDetail,
-  } from '../Types.d.ts'
-  import InputRow from '../components/InputRow.svelte'
-  import { AthenaDataTypeImpl } from '../utilClasses/AthenaDataTypeImpl.ts'
-  import { assembleAthenaURL, reformatDate } from '../utils.ts'
+  } from '$lib/Types'
+  import InputRow from '$lib/components/InputRow.svelte'
+  import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
+  import { assembleAthenaURL, reformatDate } from '$lib/utils'
 
   export let actionColumnCustom: boolean = false
 
