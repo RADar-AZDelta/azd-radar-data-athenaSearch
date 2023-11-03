@@ -1,6 +1,6 @@
 {
   "name": "@radar-azdelta/svelte-athena-search",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "repository": {
     "type": "git",
     "url": "https://github.com/RADar-AZDelta/svelte-Athena-search.git"
@@ -49,11 +49,12 @@
     "lodash.debounce": "^4.0.8",
     "svelte": "^4.0.5"
   },
-  "files": ["dist"],
+  "files": ["dist", "dist/index.js", "dist/index.d.ts"],
+  "svelte": "index.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"types": "./index.d.ts",
+			"svelte": "./index.js"
 		}
 	}
 }
