@@ -6,7 +6,7 @@ import type {
 } from '$lib/Types'
 
 export {
-    Search,
+    Search as default,
     RowSelectedEventDetail,
     CustomRowCreationEventDetail,
     ICustomConcept
