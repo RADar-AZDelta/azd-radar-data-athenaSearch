@@ -47,15 +47,8 @@
   {#if openedFilter == filter.name}
     <div data-name="filter-item">
       <div data-name="filter-input">
-        <input
-          type="text"
-          title="Search for filter"
-          placeholder="Filter"
-          data-name={filter.name}
-          bind:value={filterInput}
-          on:input={onChange}
-        />
-        <button title="Remove input filter" on:click={removeInputFromFilter}>
+        <input title="Search for filter" placeholder="Filter" bind:value={filterInput} on:input={onChange} />
+        <button data-name="filter-item-button" title="Remove input filter" on:click={removeInputFromFilter}>
           <SvgIcon href="/icons.svg" id="x" height="16px" width="16px" />
         </button>
       </div>

@@ -62,22 +62,19 @@
   async function outClick() {
     suggestionsFocus = false
   }
+
+  async function onFocus() {
+    focus = true
+    suggestionsFocus = true
+  }
+
+  async function onFocusOut() {
+    focus = false
+  }
 </script>
 
-<div data-name="autocomplete-input">
-  <input
-    title={id}
-    type="text"
-    bind:value={inputValue}
-    on:input={onInput}
-    on:focus={() => {
-      focus = true
-      suggestionsFocus = true
-    }}
-    on:focusout={() => {
-      focus = false
-    }}
-  />
+<div>
+  <input title={id} bind:value={inputValue} on:input={onInput} on:focus={onFocus} on:focusout={onFocusOut} />
   {#if list && filteredValues.size > 0 && (focus || suggestionsFocus)}
     <ul use:clickOutside on:outClick={outClick}>
       {#each [...filteredValues] as [key, value], i}

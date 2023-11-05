@@ -19,6 +19,9 @@
   import Selection from '$lib/components/Selection.svelte'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import AthenaRow from '$lib/components/AthenaRow.svelte'
+  import InputRow from '$lib/components/InputRow.svelte'
+  import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
+  import { assembleAthenaURL, reformatDate } from '$lib/utils'
   import type {
     CustomRowCreationEventDetail,
     CustomOptionsEvents,
@@ -27,9 +30,8 @@
     IinputConfig,
     SelectionChangedEventDetail,
   } from '$lib/Types'
-  import InputRow from '$lib/components/InputRow.svelte'
-  import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
-  import { assembleAthenaURL, reformatDate } from '$lib/utils'
+  import '$lib/styles/layout.scss'
+  import '$lib/styles/table.scss'
 
   export let actionColumnCustom: boolean = false
 
@@ -197,7 +199,7 @@
               id={value}
               style={`background-color: ${filterColors[filterNames[filter]]}`}
             >
-              <button on:click={() => removeFilter(filter, value)}>
+              <button data-name="activated-filter-button" on:click={() => removeFilter(filter, value)}>
                 <SvgIcon href="/icons.svg" id="x" width="16px" height="16px" />
               </button>
               <p>{value}</p>
@@ -212,11 +214,12 @@
               {#if facets[opt.altNameFacet].hasOwnProperty(option) && facets[opt.altNameFacet][option] > 0}
                 <input
                   id={option}
+                  data-name="filter-option-input"
                   type="checkbox"
                   checked={checkFilter(key, opt.altName, option)}
                   on:click={e => updateAPIFilters(e, opt.altName, option)}
                 />
-                <label for={option}>{option.replaceAll('/', ' / ')}</label>
+                <label data-name="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
               {/if}
             </div>
           </AthenaFilter>
