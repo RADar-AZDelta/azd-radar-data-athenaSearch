@@ -14,13 +14,71 @@
   }
 </script>
 
-<div data-name="concept-choice">
-  <button>
-    <input type="radio" bind:group={conceptSelection} id="athena" name="concept-type" value="athena" />
-    <label for="athena">Athena concepts</label>
+<div class="concept-choice">
+  <button class="concept-choice-button">
+    <input
+      class="concept-choice-input"
+      type="radio"
+      bind:group={conceptSelection}
+      id="athena"
+      name="concept-type"
+      value="athena"
+    />
+    <label class="concept-choice-label" for="athena">Athena concepts</label>
   </button>
-  <button>
-    <input type="radio" bind:group={conceptSelection} id="custom" name="concept-type" value="custom" />
-    <label for="custom">Custom concept</label>
+  <button class="concept-choice-button">
+    <input
+      class="concept-choice-input"
+      type="radio"
+      bind:group={conceptSelection}
+      id="custom"
+      name="concept-type"
+      value="custom"
+    />
+    <label class="concept-choice-label" for="custom">Custom concept</label>
   </button>
 </div>
+
+<style>
+  .concept-choice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem 1rem 2rem;
+  }
+
+  .concept-choice-button {
+    width: 45%;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
+    background-color: inherit;
+    cursor: pointer;
+    display: flex;
+    padding: 0;
+  }
+
+  .concept-choice-button:has(input[type='radio'].checked) {
+    background-color: #cecece;
+  }
+
+  .concept-choice-button:hover {
+    background-color: #d8d8d8;
+  }
+
+  .concept-choice-button:active {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .concept-choice-input {
+    display: none;
+  }
+
+  .concept-choice-label {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 0;
+    cursor: pointer;
+  }
+</style>

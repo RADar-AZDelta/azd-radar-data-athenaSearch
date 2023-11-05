@@ -188,49 +188,45 @@
   }
 </script>
 
-<div data-name="athena-layout">
-  <section data-name="filters-container">
-    <div data-name="filters">
-      <div data-name="activated-filters">
-        {#each [...activatedAthenaFilters] as [filter, values]}
-          {#each values as value}
-            <div
-              data-name="activated-filter"
-              id={value}
-              style={`background-color: ${filterColors[filterNames[filter]]}`}
-            >
-              <button data-name="activated-filter-button" on:click={() => removeFilter(filter, value)}>
-                <SvgIcon href="/icons.svg" id="x" width="16px" height="16px" />
-              </button>
-              <p>{value}</p>
-            </div>
-          {/each}
+<div class="athena-layout">
+  <div class="filters">
+    <div class="activated-filters">
+      {#each [...activatedAthenaFilters] as [filter, values]}
+        {#each values as value}
+          <div class="activated-filter" id={value} style={`background-color: ${filterColors[filterNames[filter]]}`}>
+            <button class="activated-filter-button" on:click={() => removeFilter(filter, value)}>
+              <SvgIcon href="/icons.svg" id="x" width="16px" height="16px" />
+            </button>
+            <p class="activated-filter-name">{value}</p>
+          </div>
         {/each}
-      </div>
+      {/each}
+    </div>
+    <div class="choice-filters">
       {#each [...JSONFilters] as [key, opt]}
         {#if facets && facets[opt.altNameFacet]}
           <AthenaFilter filter={{ name: key, opts: opt }} bind:openedFilter color={filterColors[key.toLowerCase()]}>
-            <div slot="option" data-name="filter-option" let:option>
+            <div slot="option" class="filter-option" let:option>
               {#if facets[opt.altNameFacet].hasOwnProperty(option) && facets[opt.altNameFacet][option] > 0}
                 <input
                   id={option}
-                  data-name="filter-option-input"
+                  class="filter-option-input"
                   type="checkbox"
                   checked={checkFilter(key, opt.altName, option)}
                   on:click={e => updateAPIFilters(e, opt.altName, option)}
                 />
-                <label data-name="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
+                <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
               {/if}
             </div>
           </AthenaFilter>
         {/if}
       {/each}
     </div>
-  </section>
-  <section data-name="athena-table">
+  </div>
+  <section class="athena-table">
     <Selection on:selectionChanged={selectionChanged} />
     {#if conceptSelection === 'athena'}
-      <div data-name="table-container">
+      <div class="table-container">
         <DataTable
           data={fetchDataFunc}
           {columns}
@@ -258,8 +254,8 @@
         </DataTable>
       </div>
     {:else if conceptSelection === 'custom'}
-      <div data-name="custom-concept-container">
-        <h2>Create a custom concept</h2>
+      <div class="custom-concept-container">
+        <h2 class="custom-concept-title">Create a custom concept</h2>
         {#await getCustomColumnConfig() then config}
           <DataTable
             data={[{}]}
@@ -273,9 +269,10 @@
         {/await}
 
         {#if errorMessage}
-          <div data-name="errormessage">
+          <div class="errormessage">
             <p>{errorMessage}</p>
             <button
+              class="errormessage-button"
               on:click={() => {
                 errorMessage = ''
               }}><SvgIcon href="/icons.svg" id="x" width="16px" height="16px" /></button
@@ -286,3 +283,139 @@
     {/if}
   </section>
 </div>
+
+<style>
+  .athena-layout {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 15%;
+    padding: 0 0.5rem 0 1.5rem;
+    border-right: 1px solid lightgray;
+  }
+
+  /* .filters {
+    flex: 1 1 auto;
+  } */
+
+  /* .choice-filters {
+    backgroun;
+  } */
+
+  .activated-filters {
+    margin-top: 1rem;
+    min-height: 20%;
+    max-height: 20%;
+    overflow-y: auto;
+  }
+
+  .activated-filter {
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.5rem 0.5rem;
+    border-radius: 10px;
+    color: white;
+  }
+
+  .activated-filter-button {
+    background-color: inherit;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .activated-filter-button:hover {
+    background-color: #d8d8d8;
+  }
+
+  .activated-filter-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .activated-filter-name {
+    margin: 0;
+  }
+
+  .filter-option {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 0 0.5rem;
+  }
+
+  .filter-option-input {
+    border: 1px solid #d8d8d8;
+  }
+
+  .filter-option-input:hover {
+    cursor: pointer;
+    border: 1px solid #bbbbbb;
+  }
+
+  .filter-option-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .filter-option-label {
+    max-width: 80%;
+  }
+
+  .table-container {
+    padding: 0 1rem;
+    flex: 1 1 auto;
+    overflow: auto;
+  }
+
+  .custom-concept-container {
+    padding: 1rem 1rem 3rem 1rem;
+  }
+
+  .custom-concept-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .errormessage {
+    display: flex;
+    width: max-content;
+    border-radius: 5px;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid red;
+    background-color: lightcoral;
+    padding: 0.5rem 1rem;
+  }
+
+  .errormessage-button {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    height: auto;
+  }
+
+  .athena-table {
+    min-width: 63%;
+    flex: 1 1 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+</style>

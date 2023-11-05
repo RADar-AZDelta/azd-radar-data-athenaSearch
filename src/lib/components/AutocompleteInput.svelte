@@ -74,15 +74,68 @@
 </script>
 
 <div>
-  <input title={id} bind:value={inputValue} on:input={onInput} on:focus={onFocus} on:focusout={onFocusOut} />
+  <input
+    class="autocomplete-input"
+    title={id}
+    bind:value={inputValue}
+    on:input={onInput}
+    on:focus={onFocus}
+    on:focusout={onFocusOut}
+  />
   {#if list && filteredValues.size > 0 && (focus || suggestionsFocus)}
-    <ul use:clickOutside on:outClick={outClick}>
+    <ul class="autocomplete-list" use:clickOutside on:outClick={outClick}>
       {#each [...filteredValues] as [key, value], i}
         {#if i < 7 && !autoCompleted}
           <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-          <li id={key} on:click={onClickAutoComplete} on:keydown={onClickAutoComplete}>{key}</li>
+          <li class="autocomplete-item" id={key} on:click={onClickAutoComplete} on:keydown={onClickAutoComplete}>
+            {key}
+          </li>
         {/if}
       {/each}
     </ul>
   {/if}
 </div>
+
+<style>
+  .autocomplete-input {
+    border: 1px solid #d8d8d8;
+  }
+
+  .autocomplete-input:hover {
+    border: 1px solid #bbbbbb;
+  }
+
+  .autocomplete-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .autocomplete-list {
+    list-style-type: none;
+    padding: 0.5rem 0 2rem 0;
+    margin: 0;
+    position: absolute;
+  }
+
+  .autocomplete-item {
+    border-top: 1px solid #cecece;
+    border-left: 1px solid #cecece;
+    border-right: 1px solid #cecece;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    cursor: pointer;
+  }
+
+  .autocomplete-item:last-child {
+    border: 1px solid #cecece;
+  }
+
+  .autocomplete-item:hover {
+    background-color: #e2e2e2;
+  }
+
+  .autocomplete-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+</style>
