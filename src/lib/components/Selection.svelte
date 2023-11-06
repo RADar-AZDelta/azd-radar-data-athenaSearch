@@ -2,7 +2,11 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import type { CustomOptionsEvents } from '$lib/Types'
+  import type { CustomOptionsEvents, IView } from '$lib/Types'
+
+  export let views: IView[] = []
+
+  const expandedViews: IView[] = [{ name: 'Athena concepts', value: 'athena', viewSlot: 'slotView0' }, ...views]
 
   let conceptSelection: string = 'athena'
 
@@ -10,33 +14,24 @@
 
   $: {
     conceptSelection
-    dispatch('selectionChanged', { selection: conceptSelection })
+    dispatch('viewChanged', { view: conceptSelection })
   }
 </script>
 
 <div class="concept-choice">
-  <button class="concept-choice-button">
-    <input
-      class="concept-choice-input"
-      type="radio"
-      bind:group={conceptSelection}
-      id="athena"
-      name="concept-type"
-      value="athena"
-    />
-    <label class="concept-choice-label" for="athena">Athena concepts</label>
-  </button>
-  <button class="concept-choice-button">
-    <input
-      class="concept-choice-input"
-      type="radio"
-      bind:group={conceptSelection}
-      id="custom"
-      name="concept-type"
-      value="custom"
-    />
-    <label class="concept-choice-label" for="custom">Custom concept</label>
-  </button>
+  {#each expandedViews as view}
+    <button class="concept-choice-button">
+      <input
+        class="concept-choice-input"
+        type="radio"
+        bind:group={conceptSelection}
+        id={view.value}
+        name="concept-type"
+        value={view.viewSlot}
+      />
+      <label class="concept-choice-label" for={view.value}>{view.name}</label>
+    </button>
+  {/each}
 </div>
 
 <style>

@@ -2,14 +2,13 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import type { IColumnMetaData } from '@radar-azdelta/svelte-datatable'
-  import type { AutoCompleteEventDetail, IinputConfig } from '$lib/Types'
-  import AutocompleteInput from '$lib/components/AutocompleteInput.svelte'
+  import AutocompleteInput from '$lib/extraComponents/AutocompleteInput.svelte'
 
-  export let columns: IColumnMetaData[] | undefined, data: Record<string, IinputConfig>
+  export let columns: IColumnMetaData[] | undefined, data: Record<string, any>
 
   let convertedRow: Record<string, string> = {}
 
-  async function saveToRow(e: CustomEvent<AutoCompleteEventDetail>) {
+  async function saveToRow(e: CustomEvent<any>) {
     data[e.detail.id].value = e.detail.value
   }
 

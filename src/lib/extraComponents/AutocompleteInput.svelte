@@ -25,7 +25,6 @@
     value = inputValue
     if (!list) return
     // The input value must be chosen from the list of values suggested
-    if (Object.values(list).includes(value)) dispatch('autoComplete', { id, value, key })
   }
 
   // A method to apply a suggestion to the input field

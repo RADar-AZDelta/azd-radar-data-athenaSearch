@@ -18,7 +18,7 @@
       href="https://www.npmjs.com/package/@radar-azdelta/svelte-datatable">svelte-datatable package</a
     > (also created by us), that is a easy to use and fast table component. This example shows a no config search component.
   </p>
-  <a href="/actions">Another example with custom actions</a>
+  <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
     <Search />
   </div>
