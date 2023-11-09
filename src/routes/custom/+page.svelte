@@ -3,7 +3,7 @@
 <script lang="ts">
   import type { IView } from '$lib/Types'
   import Search from '$lib/components/Search.svelte'
-    import CustomView from '$lib/extraComponents/CustomView.svelte'
+  import CustomView from '$lib/extraComponents/CustomView.svelte'
   import Details from '$lib/extraComponents/Details.svelte'
   import Head from '$lib/extraComponents/Head.svelte'
   let selected: Record<string, any> = {}
@@ -12,9 +12,29 @@
     { name: 'mapped concepts', value: 'mapped', viewSlot: 'slotView2' },
   ]
 
+  const rows = {
+    row1: {
+      sourceCode: '123',
+      sourceName: 'test',
+      sourceFrequency: 1,
+    },
+    row2: {
+      sourceCode: '222',
+      sourceName: 'work',
+      sourceFrequency: 1,
+    },
+    row3: {
+      sourceCode: '321',
+      sourceName: 'last',
+      sourceFrequency: 1,
+    },
+  }
+
   async function showConcept(row: Record<string, any>) {
     selected = row
   }
+
+  let globalFilter: { column: string; filter: string | undefined } = { column: 'all', filter: undefined }
 </script>
 
 <svelte:head>
@@ -33,8 +53,14 @@
 
   <p>Selected Row: {JSON.stringify(selected)}</p>
 
+  <div>
+    <button on:click={() => (globalFilter.filter = rows.row1.sourceName)}>Row1</button>
+    <button on:click={() => (globalFilter.filter = rows.row2.sourceName)}>Row2</button>
+    <button on:click={() => (globalFilter.filter = rows.row3.sourceName)}>Row3</button>
+  </div>
+
   <div class="container">
-    <Search {views}>
+    <Search {views} bind:globalFilter>
       <button slot="action-athena" let:renderedRow on:click={() => showConcept(renderedRow)}>Action</button>
       <div slot="upperSlot">
         <Head />

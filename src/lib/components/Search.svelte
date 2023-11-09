@@ -14,7 +14,8 @@
   import type { IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 
-  export let views: IView[] = []
+  export let views: IView[] = [],
+    globalFilter: { column: string; filter: string | undefined }
 
   const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
@@ -26,11 +27,12 @@
     id: 'athena',
     actionColumn: true,
     rowsPerPageOptions: [5, 10, 15, 20],
-    globalFilter: { column: 'all', filter: undefined },
+    globalFilter,
     saveOptions: false,
     singleSort: true,
     dataTypeImpl: new AthenaDataTypeImpl(),
   }
+  let mainFilter: string | undefined = undefined
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // EVENTS
@@ -58,6 +60,8 @@
     pagination: IPagination
   ): Promise<{ totalRows: number; data: any[][] | any[] }> {
     let filter = filteredColumns.values().next().value
+    if (mainFilter) filter = mainFilter
+    mainFilter = undefined
     const sort = sortedColumns.entries().next().value
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
@@ -83,6 +87,12 @@
 
   $: {
     athenaFilters
+    fetchDataFunc = fetchData
+  }
+
+  $: {
+    globalFilter
+    mainFilter = globalFilter.filter
     fetchDataFunc = fetchData
   }
 </script>
@@ -134,7 +144,6 @@
 <style>
   .athena-layout {
     display: flex;
-    align-items: center;
     width: 100%;
     height: 100%;
     overflow: hidden;
