@@ -15,7 +15,7 @@
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 
   export let views: IView[] = [],
-    globalFilter: { column: string; filter: string | undefined }
+    globalFilter: { column: string; filter: string | undefined } = { column: 'all', filter: undefined }
 
   const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
   const dispatch = createEventDispatcher<CustomOptionsEvents>()

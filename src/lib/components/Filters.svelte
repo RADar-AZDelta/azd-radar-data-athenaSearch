@@ -243,6 +243,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
     cursor: pointer;
     border: none;
     background-color: inherit;
