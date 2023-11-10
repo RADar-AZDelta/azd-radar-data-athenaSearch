@@ -33,6 +33,8 @@
     dataTypeImpl: new AthenaDataTypeImpl(),
   }
   let mainFilter: string | undefined = undefined
+  let lastTypedFilter: string
+  let lastChangedTyped: boolean = true
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // EVENTS
@@ -60,8 +62,11 @@
     pagination: IPagination
   ): Promise<{ totalRows: number; data: any[][] | any[] }> {
     let filter = filteredColumns.values().next().value
-    if (mainFilter) filter = mainFilter
-    mainFilter = undefined
+    if (lastTypedFilter !== filter) {
+      lastTypedFilter = filter
+      lastChangedTyped = true
+    }
+    if (!lastChangedTyped) filter = mainFilter
     const sort = sortedColumns.entries().next().value
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
@@ -93,6 +98,7 @@
   $: {
     globalFilter
     mainFilter = globalFilter.filter
+    lastChangedTyped = false
     fetchDataFunc = fetchData
   }
 </script>
