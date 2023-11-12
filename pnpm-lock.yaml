@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@radar-azdelta/svelte-datatable':
-    specifier: ^0.0.48
-    version: 0.0.48
+    specifier: ^0.0.56
+    version: 0.0.56
   '@sveltejs/kit':
     specifier: ^1.20.4
     version: 1.20.4(svelte@4.0.5)(vite@4.4.2)
@@ -362,11 +362,12 @@ packages:
   /@polka/url@1.0.0-next.23:
     resolution: {integrity: sha512-C16M+IYz0rgRhWZdCmK+h58JMv8vijAA61gmz2rspCSwKwzBebpdcsiUmwrtJRdphuY30i6BSLEOP8ppbNLyLg==}
 
-  /@radar-azdelta/svelte-datatable@0.0.48:
-    resolution: {integrity: sha512-sBndsTAUVgauUpVB9tQ4Y2ebufV4KP73rh4ncvGcrjfscJKntIoU71JVnXPREup6tLT0m3hylLwG6+G4P5e0cw==}
+  /@radar-azdelta/svelte-datatable@0.0.56:
+    resolution: {integrity: sha512-pqUvL4H7yBDkVLI5OVU/CHZLhJPISawgGT3x2/gaqk0eGC12tT53ko+i4mIPahpQHU/N9cxXEViIrZqk/VUzyg==}
     dependencies:
       '@types/lodash': 4.14.199
       arquero: 5.2.0
+      comlink: 4.4.1
       lodash.debounce: 4.0.8
       lodash.isequal: 4.5.0
     transitivePeerDependencies:
@@ -472,8 +473,8 @@ packages:
   /@types/estree@1.0.2:
     resolution: {integrity: sha512-VeiPZ9MMwXjO32/Xu7+OwflfmeoRwkE/qzndw42gGtgJwZopBnzy2gD//NN1+go1mADzkDcqf/KnFRSjTJ8xJA==}
 
-  /@types/flatbuffers@1.10.1:
-    resolution: {integrity: sha512-Ljv5jhGc+SwSKZLuj9zkXkQXby6oX4VYWFgYIZqeXPvxzdgyBqJN9+u7d406XDow7ohulSxB8XhosLXN1dANKQ==}
+  /@types/flatbuffers@1.10.3:
+    resolution: {integrity: sha512-kwJQsAROanCiMXSLjcTLmYVBIJ9Qyuqs92SaDIcj2EII2KnDgZbiU7it1Z/JfZd1gmxw/lAahMysQ6ZM+j3Ryw==}
     dev: false
 
   /@types/json-schema@7.0.13:
@@ -693,7 +694,7 @@ packages:
     dependencies:
       '@types/command-line-args': 5.2.0
       '@types/command-line-usage': 5.0.2
-      '@types/flatbuffers': 1.10.1
+      '@types/flatbuffers': 1.10.3
       '@types/node': 18.7.23
       '@types/pad-left': 2.1.1
       command-line-args: 5.2.1
@@ -845,6 +846,10 @@ packages:
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
     dev: true
+
+  /comlink@4.4.1:
+    resolution: {integrity: sha512-+1dlx0aY5Jo1vHy/tSsIGpSkN4tS9rZSW8FIhG0JH/crs9wwweswIo/POr451r7bZww3hFbPAKnTpimzL/mm4Q==}
+    dev: false
 
   /command-line-args@5.2.1:
     resolution: {integrity: sha512-H4UfQhZyakIjC74I9d34fGYDwk3XpSr17QhEd0Q3I9Xq1CETHo4Hcuo87WyWHpAF1aSLjLRf5lD9ZGX2qStUvg==}
