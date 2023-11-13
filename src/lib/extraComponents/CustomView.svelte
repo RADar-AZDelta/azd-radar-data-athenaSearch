@@ -5,8 +5,8 @@
   import suggestions from '$lib/config/suggestions.json'
   import { reformatDate } from '$lib/utils'
   import DataTable from '@radar-azdelta/svelte-datatable'
-  import InputRow from './InputRow.svelte'
-  import SvgIcon from '../components/SvgIcon.svelte'
+  import InputRow from '$lib/extraComponents/InputRow.svelte'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
 
   export let actionColumnCustom: boolean = false
 
@@ -47,12 +47,7 @@
   {#if errorMessage}
     <div class="errormessage">
       <p>{errorMessage}</p>
-      <button
-        class="errormessage-button"
-        on:click={() => {
-          errorMessage = ''
-        }}><SvgIcon href="/icons.svg" id="x" width="16px" height="16px" /></button
-      >
+      <button class="errormessage-button" on:click={() => (errorMessage = '')}><SvgIcon id="x" /></button>
     </div>
   {/if}
 </div>

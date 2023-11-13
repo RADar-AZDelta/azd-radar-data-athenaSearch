@@ -9,7 +9,7 @@
 <div class="table-head">
   <div class="currentRow">
     <button class="arrow-button" title="Previous row" id="left">
-      <SvgIcon href="/icons.svg" id="arrow-left" width="24px" height="24px" />
+      <SvgIcon id="arrow-left" width="24px" height="24px" />
     </button>
     <table>
       <tr>
@@ -26,7 +26,7 @@
       </tr>
     </table>
     <button class="arrow-button" title="Next row" id="right">
-      <SvgIcon href="/icons.svg" id="arrow-right" width="24px" height="24px" />
+      <SvgIcon id="arrow-right" width="24px" height="24px" />
     </button>
   </div>
 </div>

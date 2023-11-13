@@ -2,26 +2,13 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import type { IColumnMetaData } from '@radar-azdelta/svelte-datatable'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
 
-  export let renderedRow: Record<string, any>,
-    columns: IColumnMetaData[] | undefined,
-    dblClickAction: Function,
-    custom: boolean = false
-
-  function referToAthena(): void {
-    const referUrl = 'https://athena.ohdsi.org/search-terms/terms/' + renderedRow.id
-    window.open(encodeURI(referUrl), '_blank')?.focus()
-  }
+  export let renderedRow: Record<string, any>, columns: IColumnMetaData[] | undefined, dblClickAction: Function
 </script>
 
 <td data-name="actions-cell">
-  {#if custom}
+  {#if $$slots['action-athena']}
     <slot name="action-athena" {renderedRow} />
-  {:else}
-    <div data-name="actions-grid">
-      <button on:click={referToAthena}><SvgIcon href="/icons.svg" id="link" width="16px" height="16px" /></button>
-    </div>
   {/if}
 </td>
 {#if columns}

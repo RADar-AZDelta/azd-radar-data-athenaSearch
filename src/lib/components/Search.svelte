@@ -5,13 +5,14 @@
   import DataTable from '@radar-azdelta/svelte-datatable'
   import columns from '$lib/config/columnsAthena.json'
   import columnNames from '$lib/config/columnNames.json'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
   import Filters from '$lib/components/Filters.svelte'
   import Selection from '$lib/components/Selection.svelte'
   import AthenaRow from '$lib/components/AthenaRow.svelte'
   import { AthenaDataTypeImpl } from '$lib/utilClasses/AthenaDataTypeImpl'
   import { assembleAthenaURL } from '$lib/utils'
-  import type { CustomOptionsEvents, UpdateFiltersEventDetail, IView, ViewChangedEventDetail } from '$lib/Types'
   import type { IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
+  import type { CustomOptionsEvents, UpdateFiltersEventDetail, IView, ViewChangedEventDetail } from '$lib/Types'
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 
   export let views: IView[] = [],
@@ -88,6 +89,11 @@
     return athenaFilters
   }
 
+  function referToAthena(row: Record<string, any>): void {
+    const referUrl = 'https://athena.ohdsi.org/search-terms/terms/' + row.id
+    window.open(encodeURI(referUrl), '_blank')?.focus()
+  }
+
   let fetchDataFunc = fetchData
 
   $: {
@@ -122,16 +128,16 @@
       {#if viewSelection === 'slotView0'}
         <div class="table-container">
           <DataTable data={fetchDataFunc} {columns} options={tableOptions}>
-            <AthenaRow
-              slot="default"
-              let:renderedRow
-              let:columns
-              {renderedRow}
-              {columns}
-              dblClickAction={rowSelected}
-              custom={$$slots['action-athena']}
-            >
-              <slot let:renderedRow {renderedRow} slot="action-athena" name="action-athena" />
+            <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected}>
+              <div slot="action-athena">
+                {#if $$slots['action-athena']}
+                  <slot {renderedRow} name="action-athena" />
+                {:else}
+                  <div data-name="actions-grid">
+                    <button on:click={() => referToAthena(renderedRow)}><SvgIcon id="link" /></button>
+                  </div>
+                {/if}
+              </div>
             </AthenaRow>
           </DataTable>
         </div>

@@ -1,11 +1,12 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import type { IView } from '$lib/Types'
   import Search from '$lib/components/Search.svelte'
-  import CustomView from '$lib/extraComponents/CustomView.svelte'
-  import Details from '$lib/extraComponents/Details.svelte'
   import Head from '$lib/extraComponents/Head.svelte'
+  import Details from '$lib/extraComponents/Details.svelte'
+  import CustomView from '$lib/extraComponents/CustomView.svelte'
+  import type { IView } from '$lib/Types'
+
   let selected: Record<string, any> = {}
   const views: IView[] = [
     { name: 'custom concept', value: 'custom', viewSlot: 'slotView1' },

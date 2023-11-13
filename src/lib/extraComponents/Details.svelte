@@ -17,7 +17,7 @@
   <section class="container">
     <div class="head">
       <button class="button" on:click={() => sideVisibilityChange(false)}>
-        <SvgIcon href="/icons.svg" id="chevrons-right" width="16px" height="16px" />
+        <SvgIcon id="chevrons-right" />
       </button>
       <h2 class="title">Detail</h2>
     </div>
@@ -36,7 +36,7 @@
 {:else}
   <div class="sidebar-left">
     <button class="closed-bar" on:click={() => sideVisibilityChange(true)}>
-      <SvgIcon href="/icons.svg" id="chevrons-left" width="16px" height="16px" />
+      <SvgIcon id="chevrons-left" />
       <p>D</p>
       <p>E</p>
       <p>T</p>

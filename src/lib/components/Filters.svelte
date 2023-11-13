@@ -1,9 +1,9 @@
 <script lang="ts">
-  import SvgIcon from './SvgIcon.svelte'
-  import filters from '$lib/config/filters.json'
-  import type { CustomOptionsEvents, IOptions } from '$lib/Types'
-  import AthenaFilter from './AthenaFilter.svelte'
   import { createEventDispatcher } from 'svelte'
+  import filters from '$lib/config/filters.json'
+  import SvgIcon from '$lib/components/SvgIcon.svelte'
+  import AthenaFilter from '$lib/components/AthenaFilter.svelte'
+  import type { CustomOptionsEvents, IOptions } from '$lib/Types'
 
   export let facets: Record<string, any> | undefined, athenaFilters: Map<string, string[]>
 
@@ -80,7 +80,7 @@
     <div class="filters-head">
       <h2 class="filters-title">Filters</h2>
       <button class="filters-button" on:click={() => sideVisibilityChange(false)} id="filters">
-        <SvgIcon href="/icons.svg" id="chevrons-left" width="16px" height="16px" />
+        <SvgIcon id="chevrons-left" />
       </button>
     </div>
     <div class="choice-filters">
@@ -108,7 +108,7 @@
           {#each values as value}
             <div class="activated-filter" id={value} style={`background-color: ${colors[filterNames[filter]]}`}>
               <button class="activated-filter-button" on:click={() => removeFilter(filter, value)}>
-                <SvgIcon href="/icons.svg" id="x" width="16px" height="16px" />
+                <SvgIcon id="x" />
               </button>
               <p class="activated-filter-name">{value}</p>
             </div>
@@ -120,7 +120,7 @@
 {:else}
   <div class="sidebar-right">
     <button class="closed-bar" on:click={() => sideVisibilityChange(true)}>
-      <SvgIcon href="/icons.svg" id="chevrons-right" width="16px" height="16px" />
+      <SvgIcon id="chevrons-right" />
       <p>F</p>
       <p>I</p>
       <p>L</p>
@@ -128,7 +128,7 @@
       <p>E</p>
       <p>R</p>
       <p>S</p>
-      <SvgIcon href="/icons.svg" id="chevrons-right" width="16px" height="16px" />
+      <SvgIcon id="chevrons-right" />
     </button>
   </div>
 {/if}

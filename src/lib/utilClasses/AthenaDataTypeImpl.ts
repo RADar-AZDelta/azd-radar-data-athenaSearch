@@ -7,25 +7,21 @@ import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable/components/d
 
 
 export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeFunctionalities {
-      async setData (data: IDataTypeInfo): Promise<void> {
-      if (data.data) this.data = data.data as FetchDataFunc
-      if (data.internalOptions) this.internalOptions = data.internalOptions
-      if (data.internalColumns) this.internalColumns = data.internalColumns
-      if (data.renderedData) this.renderedData = data.renderedData
-    }
+  async setData(data: IDataTypeInfo): Promise<void> {
+    if (data.data) this.data = data.data as FetchDataFunc
+    if (data.internalOptions) this.internalOptions = data.internalOptions
+    if (data.internalColumns) this.internalColumns = data.internalColumns
+    if (data.renderedData) this.renderedData = data.renderedData
+  }
 
   async setInternalColumns(columns: IColumnMetaData[] | undefined): Promise<IColumnMetaData[]> {
-    if(columns) this.internalColumns = columns
-    if(this.internalColumns) {
-              this.internalColumns!.forEach(col => {
-          if (!col.width) col.width = this.internalOptions!.defaultColumnWidth
-        })
-    }
+    if (columns) this.internalColumns = columns
+    if (this.internalColumns)
+      for (let col of this.internalColumns) if (!col.width) col.width = this.internalOptions!.defaultColumnWidth
     return (this.internalColumns as IColumnMetaData[])
   }
-  
-  async render (onlyPaginationChanged: boolean): Promise<IRender> {
-    let start: number
+
+  async render(onlyPaginationChanged: boolean): Promise<IRender> {
     const filteredColumns = this.internalColumns!.reduce<Map<string, TFilter>>((acc, cur, i) => {
       if (cur && cur.filter) acc.set(cur.id, cur.filter)
       return acc
@@ -47,13 +43,13 @@ export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeF
     }
   }
 
-  async saveToFile (): Promise<void> {
+  async saveToFile(): Promise<void> {
     const fileHandle: FileSystemFileHandle = await (<any>window).showSaveFilePicker(this.saveOptions)
     let csvArrayObjObjects = ''
     let keyCounterArrayOfObjects: number = 0
     for (let row = 0; row <= this.renderedData!.length; row++) {
       for (let col of this.internalColumns!) {
-        if (row == 0) {
+        if (!row) {
           csvArrayObjObjects += col.id + (keyCounterArrayOfObjects + 1 < this.internalColumns!.length ? ',' : '\r\n')
           keyCounterArrayOfObjects++
         } else {
@@ -69,12 +65,12 @@ export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeF
     await writableArrayOfObjects.close()
   }
 
-  async getBlob (): Promise<Blob> {
+  async getBlob(): Promise<Blob> {
     let csvArrayObjObjects = ''
     let keyCounterArrayOfObjects: number = 0
     for (let row = 0; row <= this.renderedData!.length; row++) {
       for (let col of this.internalColumns!) {
-        if (row == 0) {
+        if (!row) {
           csvArrayObjObjects += col.id + (keyCounterArrayOfObjects + 1 < this.internalColumns!.length ? ',' : '\r\n')
           keyCounterArrayOfObjects++
         } else {
@@ -85,38 +81,33 @@ export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeF
       }
       keyCounterArrayOfObjects = 0
     }
-    const blob = new Blob([csvArrayObjObjects], { type: 'text/csv'})
+    const blob = new Blob([csvArrayObjObjects], { type: 'text/csv' })
     return blob
   }
 
-  async replaceValuesOfColumn (currentValue: any, updatedValue: any, column: string): Promise<void> {
-  }
+  async replaceValuesOfColumn(currentValue: any, updatedValue: any, column: string): Promise<void> { }
 
-  async executeExpressionsAndReturnResults (expressions: Record<string, any>): Promise<void> {
-  }
+  async executeExpressionsAndReturnResults(expressions: Record<string, any>): Promise<void> { }
 
-  async executeQueryAndReturnResults (query: any): Promise<void> {
-  }
+  async executeQueryAndReturnResults(query: any): Promise<void> { }
 
-  async insertColumns (cols: IColumnMetaData[]): Promise<void> {
-  }
+  async insertColumns(cols: IColumnMetaData[]): Promise<void> { }
 
-  async getFullRow (originalIndex: number): Promise<void> {
-  }
+  async getFullRow(originalIndex: number): Promise<void> { }
 
-  async deleteRows (originalIndices: number[]): Promise<void> {
-  }
+  async getNextRow(currentIndex: number, rowsPerPage: number, currentPage: number): Promise<any> { }
 
-  async insertRows (rows: Record<string, any>[]): Promise<void> {
-  }
+  async getPreviousRow(currentIndex: number, rowsPerPage: number, currentPage: number): Promise<any> { }
 
-  async updateRows (rowsToUpdateByOriginalIndex: Map<number, Record<string, any>>): Promise<void> {
-  }
+  async deleteRows(originalIndices: number[]): Promise<void> { }
 
-  async renameColumns (columns: Record<string, string>): Promise<void> {
-  }
+  async insertRows(rows: Record<string, any>[]): Promise<void> { }
 
-  async applyFilter(data: any[] | any[][]): Promise<void> {}
+  async updateRows(rowsToUpdateByOriginalIndex: Map<number, Record<string, any>>): Promise<void> { }
 
-  async applySort(data: any[] | any[][]): Promise<void> {}
+  async renameColumns(columns: Record<string, string>): Promise<void> { }
+
+  async applyFilter(data: any[] | any[][]): Promise<void> { }
+
+  async applySort(data: any[] | any[][]): Promise<void> { }
 }

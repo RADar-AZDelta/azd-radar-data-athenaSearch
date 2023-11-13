@@ -42,7 +42,7 @@
       <span class="filter-color" style={`background-color: ${color};`} />
       <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
     </div>
-    <SvgIcon href="/icons.svg" id="updown" width="16px" height="16px" />
+    <SvgIcon id="updown" />
   </button>
   {#if openedFilter == filter.name}
     <div class="filter-item">
@@ -55,7 +55,7 @@
           on:input={onChange}
         />
         <button class="filter-item-button" title="Remove input filter" on:click={removeInputFromFilter}>
-          <SvgIcon href="/icons.svg" id="x" height="16px" width="16px" />
+          <SvgIcon id="x" />
         </button>
       </div>
       {#each filteredFilterOptions.options as option}
