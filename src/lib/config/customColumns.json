@@ -1,42 +1,41 @@
 [
-    {
-      "id": "concept_id",
-      "label": "id",
-      "value": "0"
-    },
-    {
-      "id": "concept_code",
-      "label": "code"
-    },
-    {
-      "id": "concept_name",
-      "label": "name"
-    },
-    {
-      "id": "concept_class_id",
-      "label": "className"
-    },
-    {
-      "id": "domain_id",
-      "label": "domain"
-    },
-    {
-      "id": "vocabulary_id",
-      "label": "vocabulary"
-    },
-    {
-      "id": "standard_concept"
-    },
-    {
-      "id": "valid_start_date",
-      "value": "date"
-    },
-    {
-      "id": "valid_end_date",
-      "value": "date"
-    },
-    {
-      "id": "invalid_reason"
-    }
-  ]
-  
+  {
+    "id": "concept_id",
+    "label": "id",
+    "value": "0"
+  },
+  {
+    "id": "concept_code",
+    "label": "code"
+  },
+  {
+    "id": "concept_name",
+    "label": "name"
+  },
+  {
+    "id": "concept_class_id",
+    "label": "className"
+  },
+  {
+    "id": "domain_id",
+    "label": "domain"
+  },
+  {
+    "id": "vocabulary_id",
+    "label": "vocabulary"
+  },
+  {
+    "id": "standard_concept"
+  },
+  {
+    "id": "valid_start_date",
+    "value": "date"
+  },
+  {
+    "id": "valid_end_date",
+    "value": "date"
+  },
+  {
+    "id": "invalid_reason"
+  }
+]

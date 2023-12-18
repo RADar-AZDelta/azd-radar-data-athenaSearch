@@ -1,0 +1,8 @@
+{
+  "id": "athena",
+  "actionColumn": true,
+  "defaultColumnWidth": 120,
+  "rowsPerPageOptions": [5, 10, 15, 20],
+  "saveOptions": false,
+  "singleSort": true
+}

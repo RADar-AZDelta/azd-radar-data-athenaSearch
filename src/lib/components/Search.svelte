@@ -5,6 +5,7 @@
   import DataTable from '@radar-azdelta/svelte-datatable'
   import columns from '$lib/config/columnsAthena.json'
   import columnNames from '$lib/config/columnNames.json'
+  import defaultOpts from '$lib/config/defaultTableOptions.json'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import Filters from '$lib/components/Filters.svelte'
   import Selection from '$lib/components/Selection.svelte'
@@ -15,24 +16,21 @@
   import type { CustomOptionsEvents, UpdateFiltersEventDetail, IView, ViewChangedEventDetail } from '$lib/Types'
   import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 
-  export let views: IView[] = [],
-    globalFilter: { column: string; filter: string | undefined } = { column: 'all', filter: undefined }
+  export let views: IView[] = []
+  export let globalFilter: { column: string; filter: string | undefined } = { column: 'all', filter: undefined }
+  export let tableOptions: ITableOptions | undefined = undefined
+  export let height: string = '100%'
+  export let width: string = '100%'
+  export let fontSize: string = '10px'
 
   const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
 
-  let viewSelection: string = 'slotView0'
+  let viewSelection: number = 0
   let facets: Record<string, any> | undefined = undefined
   let athenaFilters = new Map<string, string[]>([['standardConcept', ['Standard']]])
-  let tableOptions: ITableOptions = {
-    id: 'athena',
-    actionColumn: true,
-    rowsPerPageOptions: [5, 10, 15, 20],
-    globalFilter,
-    saveOptions: false,
-    singleSort: true,
-    dataTypeImpl: new AthenaDataTypeImpl(),
-  }
+  let tableOpts: ITableOptions =
+    tableOptions ?? Object.assign(defaultOpts, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
   let mainFilter: string | undefined = undefined
   let lastTypedFilter: string
   let lastChangedTyped: boolean = true
@@ -41,17 +39,11 @@
   // EVENTS
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  function rowSelected(row: Record<string, any>): void {
-    dispatch('rowSelected', { row })
-  }
+  const rowSelected = (row: Record<string, any>) => dispatch('rowSelected', { row })
 
-  async function updateFilters(e: CustomEvent<UpdateFiltersEventDetail>) {
-    athenaFilters = e.detail.athenaFilters
-  }
+  const updateFilters = (e: CustomEvent<UpdateFiltersEventDetail>) => (athenaFilters = e.detail.athenaFilters)
 
-  async function selectionChanged(e: CustomEvent<ViewChangedEventDetail>) {
-    viewSelection = e.detail.view
-  }
+  const selectionChanged = (e: CustomEvent<ViewChangedEventDetail>) => (viewSelection = e.detail.view)
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // METHODS
@@ -61,7 +53,7 @@
     filteredColumns: Map<String, TFilter>,
     sortedColumns: Map<string, SortDirection>,
     pagination: IPagination
-  ): Promise<{ totalRows: number; data: any[][] | any[] }> {
+  ) {
     let filter = filteredColumns.values().next().value
     if (lastTypedFilter !== filter) {
       lastTypedFilter = filter
@@ -85,14 +77,12 @@
     }
   }
 
-  export async function getFilters(): Promise<Map<string, string[]>> {
-    return athenaFilters
-  }
-
   function referToAthena(row: Record<string, any>): void {
     const referUrl = 'https://athena.ohdsi.org/search-terms/terms/' + row.id
     window.open(encodeURI(referUrl), '_blank')?.focus()
   }
+
+  export const getFilters = () => athenaFilters
 
   let fetchDataFunc = fetchData
 
@@ -109,7 +99,7 @@
   }
 </script>
 
-<div class="athena-layout">
+<div class="athena-layout" style={`--height: ${height}; --width: ${width}; --fontSize: ${fontSize};`}>
   {#if $$slots.leftSlot}
     <div class="leftslot">
       <slot name="leftSlot" />
@@ -125,25 +115,27 @@
       {#if views && views.length}
         <Selection on:viewChanged={selectionChanged} {views} />
       {/if}
-      {#if viewSelection === 'slotView0'}
+      {#if viewSelection === 0}
         <div class="table-container">
-          <DataTable data={fetchDataFunc} {columns} options={tableOptions}>
+          <DataTable data={fetchDataFunc} {columns} options={tableOpts}>
             <AthenaRow slot="default" let:renderedRow let:columns {renderedRow} {columns} dblClickAction={rowSelected}>
               <div slot="action-athena">
                 {#if $$slots['action-athena']}
                   <slot {renderedRow} name="action-athena" />
                 {:else}
                   <div data-name="actions-grid">
-                    <button on:click={() => referToAthena(renderedRow)}><SvgIcon id="link" /></button>
+                    <button on:click={() => referToAthena(renderedRow)}
+                      ><SvgIcon id="link" width={fontSize} height={fontSize} /></button
+                    >
                   </div>
                 {/if}
               </div>
             </AthenaRow>
           </DataTable>
         </div>
-      {:else if viewSelection === 'slotView1' && $$slots.slotView1}
+      {:else if viewSelection === 1 && $$slots.slotView1}
         <slot name="slotView1" />
-      {:else if viewSelection === 'slotView2' && $$slots.slotView2}
+      {:else if viewSelection === 2 && $$slots.slotView2}
         <slot name="slotView2" />
       {/if}
     </section>
@@ -154,11 +146,15 @@
 </div>
 
 <style>
+  :global(p, label, input, select, option) {
+    font-size: var(--fontSize);
+  }
+
   .athena-layout {
     display: flex;
     align-items: center;
-    width: 100%;
-    height: 100%;
+    height: var(--height);
+    width: var(--width);
     overflow: hidden;
   }
 
@@ -172,7 +168,8 @@
 
   .athena-table {
     width: 100%;
-    overflow-y: auto;
+    height: 100%;
+    /* overflow-y: auto; */
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
@@ -181,6 +178,7 @@
   .table-container {
     padding: 0 1rem;
     flex: 1 1 auto;
+    max-height: 100%;
     overflow: auto;
   }
 

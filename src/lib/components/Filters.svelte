@@ -1,54 +1,26 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import filters from '$lib/config/filters.json'
+  import filterConfig from '$lib/config/filterConfig.json'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
-  import type { CustomOptionsEvents, IOptions } from '$lib/Types'
+  import type { CustomOptionsEvents } from '$lib/Types'
 
   export let facets: Record<string, any> | undefined, athenaFilters: Map<string, string[]>
 
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
 
-  let show: boolean = false
-  let JSONFilters = new Map<string, IOptions>([])
-  let openedFilter: string
-  let colors: Record<string, string> = {
-    domain: '#ec3d31',
-    concept: '#50a5ba',
-    class: '#6967d2',
-    vocab: '#ffa200',
-    validity: '#ad007c',
-  }
-  let filterNames: Record<string, string> = {
-    domain: 'domain',
-    standardConcept: 'concept',
-    conceptClass: 'class',
-    Vocabulary: 'vocab',
-    invalidReason: 'validity',
-  }
+  let show: boolean, openedFilter: string
+  let colors: Record<string, string> = filterConfig.colors
+  let filterNames: Record<string, string> = filterConfig.names
 
-  for (let filter of filters) {
-    JSONFilters.set(filter.name, {
-      altName: filter.altName,
-      altNameFacet: filter.altNameFacet,
-      options: filter.options,
-    })
-  }
-
-  async function sideVisibilityChange(value: boolean) {
-    show = value
-  }
+  const sideVisibilityChange = async (value: boolean) => (show = value)
 
   // A method to check if the filter is already applied to the API call
   function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     let allFilters: Map<string, string[]> = athenaFilters
-    const chosenFilter = !allFilters.get(filter)
-      ? altName
-        ? allFilters.get(altName)
-        : undefined
-      : allFilters.get(filter)
-
-    return chosenFilter && chosenFilter?.includes(option) ? true : false
+    const chosen = allFilters.get(filter) ?? allFilters.get(altName ?? '')
+    return chosen && chosen?.includes(option) ? true : false
   }
 
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"
@@ -84,20 +56,26 @@
       </button>
     </div>
     <div class="choice-filters">
-      {#each [...JSONFilters] as [key, opt]}
-        {#if facets && facets[opt.altNameFacet]}
-          <AthenaFilter filter={{ name: key, opts: opt }} bind:openedFilter color={colors[key.toLowerCase()]}>
+      {#each Object.entries(filters) as [id, { name, altName, altNameFacet, options }], _}
+        {#if facets && facets[altNameFacet]}
+          <AthenaFilter
+            filter={{ name, opts: { altName, altNameFacet, options } }}
+            bind:openedFilter
+            color={colors[name.toLowerCase()]}
+          >
             <div slot="option" class="filter-option" let:option>
-              {#if facets[opt.altNameFacet].hasOwnProperty(option) && facets[opt.altNameFacet][option] > 0}
+              {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
                 <input
                   id={option}
-                  class="filter-option-input"
                   type="checkbox"
                   title="Activate/deactivate filter"
-                  checked={checkFilter(key, opt.altName, option)}
-                  on:click={e => updateAPIFilters(e, opt.altName, option)}
+                  checked={checkFilter(name, altName, option)}
+                  on:click={e => updateAPIFilters(e, altName, option)}
                 />
                 <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
+              {:else}
+                <input id={option} class="disabled" type="checkbox" disabled />
+                <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
               {/if}
             </div>
           </AthenaFilter>
@@ -121,13 +99,9 @@
   <div class="sidebar-right">
     <button class="closed-bar" on:click={() => sideVisibilityChange(true)}>
       <SvgIcon id="chevrons-right" />
-      <p>F</p>
-      <p>I</p>
-      <p>L</p>
-      <p>T</p>
-      <p>E</p>
-      <p>R</p>
-      <p>S</p>
+      {#each 'FILTERS' as letter}
+        <p>{letter}</p>
+      {/each}
       <SvgIcon id="chevrons-right" />
     </button>
   </div>
@@ -139,6 +113,7 @@
     flex-direction: column;
     height: 100%;
     min-width: 15%;
+    max-width: 15%;
     padding: 0 0.5rem 0 1.5rem;
     border-right: 1px solid lightgray;
   }
@@ -212,16 +187,16 @@
     padding: 0 0 0 0.5rem;
   }
 
-  .filter-option-input {
+  input {
     border: 1px solid #d8d8d8;
   }
 
-  .filter-option-input:hover {
+  input:hover {
     cursor: pointer;
     border: 1px solid #bbbbbb;
   }
 
-  .filter-option-input:focus {
+  input:focus {
     outline: none;
     box-shadow: 0 0 0 2px #c5c5c5;
   }
@@ -232,7 +207,7 @@
 
   .sidebar-right {
     height: 100%;
-    border-right: 1px solid var(--neutral);
+    border-right: 1px solid lightgray;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -242,11 +217,19 @@
   .closed-bar {
     height: 100%;
     display: flex;
-    flex-direction: column;
     gap: 1rem;
+    flex-direction: column;
     cursor: pointer;
     border: none;
     background-color: inherit;
     font-weight: bold;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .disabled {
+    color: lightgray;
   }
 </style>

@@ -6,29 +6,22 @@
 
   export let views: IView[] = []
 
-  const expandedViews: IView[] = [{ name: 'Athena concepts', value: 'athena', viewSlot: 'slotView0' }, ...views]
+  const expandedViews: IView[] = [{ name: 'Athena concepts', value: 'athena', viewSlot: 0 }, ...views]
 
-  let conceptSelection: string = 'athena'
+  let selection: number = 0
 
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
 
   $: {
-    conceptSelection
-    dispatch('viewChanged', { view: conceptSelection })
+    selection
+    dispatch('viewChanged', { view: selection })
   }
 </script>
 
 <div class="concept-choice">
   {#each expandedViews as view}
     <button class="concept-choice-button">
-      <input
-        class="concept-choice-input"
-        type="radio"
-        bind:group={conceptSelection}
-        id={view.value}
-        name="concept-type"
-        value={view.viewSlot}
-      />
+      <input type="radio" bind:group={selection} id={view.value} value={view.viewSlot} />
       <label class="concept-choice-label" for={view.value}>{view.name}</label>
     </button>
   {/each}
@@ -65,7 +58,7 @@
     box-shadow: 0 0 0 2px #c5c5c5;
   }
 
-  .concept-choice-input {
+  input {
     display: none;
   }
 

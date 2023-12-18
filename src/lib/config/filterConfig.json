@@ -1,0 +1,16 @@
+{
+  "colors": {
+    "domain": "#ec3d31",
+    "concept": "#50a5ba",
+    "class": "#6967d2",
+    "vocab": "#ffa200",
+    "validity": "#ad007c"
+  },
+  "names": {
+    "domain": "domain",
+    "standardConcept": "concept",
+    "conceptClass": "class",
+    "Vocabulary": "vocab",
+    "invalidReason": "validity"
+  }
+}

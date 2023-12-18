@@ -45,13 +45,12 @@ body {
   }
 }
 
-
 div[data-component='svelte-datatable'] {
   div[data-component='datatable-content'] {
-    max-width: none;
+    max-width: none !important;
     width: auto;
     max-height: none;
-    overflow-y: hidden;
+    overflow-y: hidden !important;
 
     table {
       colgroup {

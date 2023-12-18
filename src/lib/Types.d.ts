@@ -14,7 +14,7 @@ export interface IFilter {
 export interface IView {
   name: string
   value: string
-  viewSlot: 'slotView0' | 'slotView1' | 'slotView2'
+  viewSlot: number
 }
 
 // Events
@@ -26,7 +26,7 @@ export interface CustomOptionsEvents {
 }
 
 export interface ViewChangedEventDetail {
-  view: string
+  view: number
 }
 
 export interface RowSelectedEventDetail {

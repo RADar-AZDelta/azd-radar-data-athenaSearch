@@ -1,21 +1,21 @@
 import adapter from '@sveltejs/adapter-static'
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/kit/vite'
 
-const dev = process.argv.includes('dev');
+const dev = process.argv.includes('dev')
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	preprocess: vitePreprocess(),
+  preprocess: vitePreprocess(),
 
-	kit: {
-		adapter: adapter(),
-		paths: {
-			base: dev ? '' : '/svelte-Athena-search'
-		},
-		prerender: {
-			handleHttpError: 'warn'
-		}
-	}
-};
+  kit: {
+    adapter: adapter(),
+    paths: {
+      base: dev ? '' : '/svelte-Athena-search',
+    },
+    prerender: {
+      handleHttpError: 'warn',
+    },
+  },
+}
 
-export default config;
+export default config
