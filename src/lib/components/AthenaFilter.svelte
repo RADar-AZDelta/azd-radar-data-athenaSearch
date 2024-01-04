@@ -11,18 +11,13 @@
   let filteredFilterOptions: IOptions = filter.opts
 
   // When the input (search for a filter) has changed
-  const onChange = debounce(async (e: any): Promise<void> => {
-    updateOptionsFromFilter((e.target as HTMLInputElement).value)
-  }, 500)
+  const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
 
   // Change the section that needs to be opened
   const showCategories = async () => (openedFilter = openedFilter === filter.name ? '' : filter.name)
 
   // Remove the criteria from the input field to search for a filter
-  const removeInputFromFilter = async (): Promise<void> => {
-    filterInput = ''
-    filteredFilterOptions = filter.opts
-  }
+  const removeInputFromFilter = async (): Promise<any> => ((filterInput = ''), (filteredFilterOptions = filter.opts))
 
   // A method to update the filters with a certain criteria
   const updateOptionsFromFilter = async (input: string): Promise<void> => {

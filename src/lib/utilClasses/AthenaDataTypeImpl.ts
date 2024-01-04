@@ -1,16 +1,15 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
-import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable/components/datatable/data/DataTypeCommonBase'
-import { csvToBlob, getCsvString } from '$lib/utils'
-import type { TFilter } from '@radar-azdelta/svelte-datatable'
+import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable'
 import type {
-  FetchDataFunc,
-  IColumnMetaData,
+  TFilter,
   IDataTypeFunctionalities,
+  IColumnMetaData,
   IDataTypeInfo,
   IRender,
   SortDirection,
-} from '@radar-azdelta/svelte-datatable/components/DataTable'
+  FetchDataFunc,
+} from '@radar-azdelta/svelte-datatable'
 
 export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeFunctionalities {
   async setData(dataTypeInfo: IDataTypeInfo): Promise<void> {
@@ -44,42 +43,4 @@ export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeF
 
     return { originalIndices, totalRows, renderedData: this.renderedData, internalColumns: this.internalColumns }
   }
-
-  async saveToFile(): Promise<void> {
-    const fileHandle: FileSystemFileHandle = await (<any>window).showSaveFilePicker(this.saveOptions)
-    const csvString = await getCsvString(this.internalColumns?.map(col => col.id) ?? [], this.renderedData)
-    const writableArrayOfObjects = await fileHandle.createWritable()
-    await writableArrayOfObjects.write(csvString)
-    await writableArrayOfObjects.close()
-  }
-
-  async getBlob(): Promise<Blob> {
-    return (await csvToBlob(this.internalColumns?.map(col => col.id) ?? [], this.renderedData)) ?? new Blob([])
-  }
-
-  async replaceValuesOfColumn(): Promise<void> {}
-
-  async executeExpressionsAndReturnResults(): Promise<void> {}
-
-  async executeQueryAndReturnResults(): Promise<void> {}
-
-  async insertColumns(): Promise<void> {}
-
-  async getFullRow(): Promise<void> {}
-
-  async getNextRow(): Promise<any> {}
-
-  async getPreviousRow(): Promise<any> {}
-
-  async deleteRows(): Promise<void> {}
-
-  async insertRows(): Promise<void> {}
-
-  async updateRows(): Promise<void> {}
-
-  async renameColumns(): Promise<void> {}
-
-  async applyFilter(): Promise<void> {}
-
-  async applySort(): Promise<void> {}
 }
