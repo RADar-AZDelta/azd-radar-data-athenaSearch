@@ -20,7 +20,8 @@
   function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     let allFilters: Map<string, string[]> = athenaFilters
     const chosen = allFilters.get(filter) ?? allFilters.get(altName ?? '')
-    return chosen && chosen?.includes(option) ? true : false
+    if(chosen && chosen?.includes(option)) return true
+    return false
   }
 
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"

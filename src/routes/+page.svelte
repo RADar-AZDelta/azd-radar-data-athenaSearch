@@ -2,6 +2,8 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import Search from '$lib/components/Search.svelte'
+
+  // TODO: refactor
 </script>
 
 <svelte:head>

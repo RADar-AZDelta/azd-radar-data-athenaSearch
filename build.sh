@@ -3,5 +3,4 @@
 # run pnpm adduser (npm adduser if you are using npm) and follow the prompts
 rm -fr ./package
 pnpm run prepublishOnly
-pnpm run package
 pnpm publish

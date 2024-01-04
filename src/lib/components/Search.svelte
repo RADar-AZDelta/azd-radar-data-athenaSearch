@@ -14,7 +14,6 @@
   import { assembleAthenaURL } from '$lib/utils'
   import type { IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
   import type { CustomOptionsEvents, UpdateFiltersEventDetail, IView, ViewChangedEventDetail } from '$lib/Types'
-  import '@radar-azdelta/svelte-datatable/styles/data-table.scss'
 
   export let views: IView[] = []
   export let globalFilter: { column: string; filter: string | undefined } = { column: 'all', filter: undefined }
@@ -97,6 +96,7 @@
     lastChangedTyped = false
     fetchDataFunc = fetchData
   }
+
 </script>
 
 <div class="athena-layout" style={`--height: ${height}; --width: ${width}; --fontSize: ${fontSize};`}>
@@ -146,6 +146,7 @@
 </div>
 
 <style>
+
   :global(p, label, input, select, option) {
     font-size: var(--fontSize);
   }

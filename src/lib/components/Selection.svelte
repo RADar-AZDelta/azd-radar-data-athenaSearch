@@ -7,7 +7,6 @@
   export let views: IView[] = []
 
   const expandedViews: IView[] = [{ name: 'Athena concepts', value: 'athena', viewSlot: 0 }, ...views]
-
   let selection: number = 0
 
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
