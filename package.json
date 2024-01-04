@@ -1,6 +1,6 @@
 {
   "name": "@radar-azdelta/svelte-athena-search",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "repository": {
     "type": "git",
     "url": "https://github.com/RADar-AZDelta/svelte-Athena-search.git"
@@ -26,10 +26,7 @@
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
     },
-    "./Search.svelte": {
-      "types": "./dist/components/Search.svelte.d.ts",
-      "svelte": "./dist/components/Search.svelte"
-    }
+    "./style": "./dist/styles/table.scss"
   },
   "files": [
     "dist",
