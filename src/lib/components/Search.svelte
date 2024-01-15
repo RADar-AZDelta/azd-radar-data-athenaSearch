@@ -48,18 +48,11 @@
   // METHODS
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  async function fetchData(
-    filteredColumns: Map<String, TFilter>,
-    sortedColumns: Map<string, SortDirection>,
-    pagination: IPagination
-  ) {
-    let filter = filteredColumns.values().next().value
-    if (lastTypedFilter !== filter) {
-      lastTypedFilter = filter
-      lastChangedTyped = true
-    }
+  async function fetchData(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
+    let filter = filters.values().next().value
+    if (lastTypedFilter !== filter) (lastTypedFilter = filter), (lastChangedTyped = true)
     if (!lastChangedTyped) filter = mainFilter
-    const sort = sortedColumns.entries().next().value
+    const sort = sorts.entries().next().value
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
       const substring = options.map(option => `&${filter}=${option}`).join()
@@ -69,11 +62,9 @@
     const response = await fetch(url)
     const apiData = await response.json()
     // Save the facets to exclude filters later
-    facets = apiData.facets
-    return {
-      data: apiData.content,
-      totalRows: apiData.totalElements,
-    }
+    ;({ facets } = apiData)
+    const { content, totalElements } = apiData
+    return { data: content, totalRows: totalElements }
   }
 
   function referToAthena(row: Record<string, any>): void {
@@ -82,21 +73,21 @@
   }
 
   export const getFilters = () => athenaFilters
+  const triggerFetch = () => (fetchDataFunc = fetchData)
 
   let fetchDataFunc = fetchData
 
   $: {
     athenaFilters
-    fetchDataFunc = fetchData
+    triggerFetch()
   }
 
   $: {
     globalFilter
     mainFilter = globalFilter.filter
     lastChangedTyped = false
-    fetchDataFunc = fetchData
+    triggerFetch()
   }
-
 </script>
 
 <div class="athena-layout" style={`--height: ${height}; --width: ${width}; --fontSize: ${fontSize};`}>
@@ -124,9 +115,9 @@
                   <slot {renderedRow} name="action-athena" />
                 {:else}
                   <div data-name="actions-grid">
-                    <button on:click={() => referToAthena(renderedRow)}
-                      ><SvgIcon id="link" width={fontSize} height={fontSize} /></button
-                    >
+                    <button on:click={() => referToAthena(renderedRow)}>
+                      <SvgIcon id="link" width={fontSize} height={fontSize} />
+                    </button>
                   </div>
                 {/if}
               </div>
@@ -146,7 +137,6 @@
 </div>
 
 <style>
-
   :global(p, label, input, select, option) {
     font-size: var(--fontSize);
   }

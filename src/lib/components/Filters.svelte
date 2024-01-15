@@ -14,14 +14,14 @@
   let colors: Record<string, string> = filterConfig.colors
   let filterNames: Record<string, string> = filterConfig.names
 
-  const sideVisibilityChange = async (value: boolean) => (show = value)
+  const hideSide = async () => (show = false)
+  const showSide = async () => (show = true)
 
   // A method to check if the filter is already applied to the API call
   function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     let allFilters: Map<string, string[]> = athenaFilters
     const chosen = allFilters.get(filter) ?? allFilters.get(altName ?? '')
-    if(chosen && chosen?.includes(option)) return true
-    return false
+    return chosen?.includes(option) ?? false
   }
 
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"
@@ -32,7 +32,7 @@
   }
 
   // A method to update the API filters applied on the API call for Athena
-  const updateAPIFilters = async (event: Event, filter: string, option: string): Promise<void> => {
+  const filtering = async (event: Event, filter: string, option: string): Promise<void> => {
     let chosenFilter = athenaFilters.get(filter)
     const inputValue = (event.target as HTMLInputElement).checked
     // If the filter is checked, add it
@@ -52,27 +52,20 @@
   <section class="filters-container">
     <div class="filters-head">
       <h2 class="filters-title">Filters</h2>
-      <button class="filters-button" on:click={() => sideVisibilityChange(false)} id="filters">
+      <button class="filters-button" on:click={hideSide} id="filters">
         <SvgIcon id="chevrons-left" />
       </button>
     </div>
     <div class="choice-filters">
       {#each Object.entries(filters) as [id, { name, altName, altNameFacet, options }], _}
         {#if facets && facets[altNameFacet]}
-          <AthenaFilter
-            filter={{ name, opts: { altName, altNameFacet, options } }}
-            bind:openedFilter
-            color={colors[name.toLowerCase()]}
-          >
+          {@const filter = { name, opts: { altName, altNameFacet, options } }}
+          <AthenaFilter {filter} bind:openedFilter color={colors[name.toLowerCase()]}>
             <div slot="option" class="filter-option" let:option>
               {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
-                <input
-                  id={option}
-                  type="checkbox"
-                  title="Activate/deactivate filter"
-                  checked={checkFilter(name, altName, option)}
-                  on:click={e => updateAPIFilters(e, altName, option)}
-                />
+                {@const title = 'Activate/deactivate filter'}
+                {@const checked = checkFilter(name, altName, option)}
+                <input id={option} type="checkbox" {title} {checked} on:click={e => filtering(e, altName, option)} />
                 <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
               {:else}
                 <input id={option} class="disabled" type="checkbox" disabled />
@@ -85,7 +78,8 @@
       <div class="activated-filters">
         {#each [...athenaFilters] as [filter, values], _}
           {#each values as value}
-            <div class="activated-filter" id={value} style={`background-color: ${colors[filterNames[filter]]}`}>
+            {@const color = colors[filterNames[filter]]}
+            <div class="activated-filter" id={value} style={`background-color: ${color}`}>
               <button class="activated-filter-button" on:click={() => removeFilter(filter, value)}>
                 <SvgIcon id="x" />
               </button>
@@ -98,7 +92,7 @@
   </section>
 {:else}
   <div class="sidebar-right">
-    <button class="closed-bar" on:click={() => sideVisibilityChange(true)}>
+    <button class="closed-bar" on:click={showSide}>
       <SvgIcon id="chevrons-right" />
       {#each 'FILTERS' as letter}
         <p>{letter}</p>
