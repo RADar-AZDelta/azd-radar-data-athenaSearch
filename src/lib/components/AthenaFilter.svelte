@@ -46,6 +46,11 @@
   }
 
   const filtering = (event: Event, filter: string, option: string) => dispatch('filtering', { event, filter, option })
+  
+  $: {
+    facets
+    sortedOptions = filter.opts.options.sort(sorting)
+  }
 </script>
 
 <div class="filter" class:open={openedFilter === filter.name}>
