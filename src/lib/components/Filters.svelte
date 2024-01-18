@@ -203,9 +203,6 @@
   .sidebar-right {
     height: 100%;
     border-right: 1px solid lightgray;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding: 0.5rem;
   }
 
@@ -214,6 +211,7 @@
     display: flex;
     gap: 1rem;
     flex-direction: column;
+    justify-content: start;
     cursor: pointer;
     border: none;
     background-color: inherit;

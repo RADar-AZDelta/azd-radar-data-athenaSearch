@@ -20,7 +20,7 @@
   </p>
   <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
-    <Search />
+    <Search tableOptions={{rowsPerPageOptions: [10, 20, 100]}}/>
   </div>
 </section>
 

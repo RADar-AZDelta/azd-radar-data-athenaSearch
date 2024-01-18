@@ -29,8 +29,8 @@
   let viewSelection: number = 0
   let facets: Record<string, any> | undefined = undefined
   let athenaFilters = new Map<string, string[]>([['standardConcept', ['Standard']]])
-  let tableOpts: ITableOptions =
-    tableOptions ?? Object.assign(defaultOpts, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
+  const defaultTableOpts = Object.assign(defaultOpts, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
+  let tableOpts: ITableOptions = tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts
   let mainFilter: string | undefined = undefined
   let lastTypedFilter: string
   let lastChangedTyped: boolean = true
