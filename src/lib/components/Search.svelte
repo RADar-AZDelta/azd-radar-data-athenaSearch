@@ -21,6 +21,7 @@
   export let height: string = '100%'
   export let width: string = '100%'
   export let fontSize: string = '10px'
+  export let showFilters: boolean = false
 
   const mappingUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
@@ -96,7 +97,7 @@
       <slot name="leftSlot" />
     </div>
   {:else}
-    <Filters bind:athenaFilters bind:facets on:updatedFilters={updateFilters} />
+    <Filters bind:athenaFilters bind:facets bind:show={showFilters} on:updatedFilters={updateFilters} />
   {/if}
   <section class="center-container">
     {#if $$slots.upperSlot}

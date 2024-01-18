@@ -1,12 +1,7 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-    import type { IView } from '$lib/Types'
   import Search from '$lib/components/Search.svelte'
-
-  const views: IView[] = [
-    { name: 'custom concepts', value: 'custom', viewSlot: 'slotView1'}
-  ]
 </script>
 
 <svelte:head>

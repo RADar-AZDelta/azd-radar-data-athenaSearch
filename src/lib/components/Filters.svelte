@@ -6,11 +6,11 @@
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
   import type { CustomOptionsEvents } from '$lib/Types'
 
-  export let facets: Record<string, any> | undefined, athenaFilters: Map<string, string[]>
+  export let facets: Record<string, any> | undefined, athenaFilters: Map<string, string[]>, show: boolean
 
   const dispatch = createEventDispatcher<CustomOptionsEvents>()
 
-  let show: boolean, openedFilter: string
+  let openedFilter: string
   let colors: Record<string, string> = filterConfig.colors
   let filterNames: Record<string, string> = filterConfig.names
 
