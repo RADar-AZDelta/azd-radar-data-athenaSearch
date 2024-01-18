@@ -106,7 +106,7 @@
   .filters-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: initial;
     min-width: 15%;
     max-width: 15%;
     padding: 0 0.5rem 0 1.5rem;
@@ -201,7 +201,7 @@
   }
 
   .sidebar-right {
-    height: 100%;
+    height: initial;
     border-right: 1px solid lightgray;
     padding: 0.5rem;
   }

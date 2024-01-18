@@ -144,7 +144,6 @@
 
   .athena-layout {
     display: flex;
-    align-items: center;
     height: var(--height);
     width: var(--width);
     overflow: hidden;
