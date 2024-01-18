@@ -17,13 +17,6 @@
   const hideSide = async () => (show = false)
   const showSide = async () => (show = true)
 
-  // A method to check if the filter is already applied to the API call
-  function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
-    let allFilters: Map<string, string[]> = athenaFilters
-    const chosen = allFilters.get(filter) ?? allFilters.get(altName ?? '')
-    return chosen?.includes(option) ?? false
-  }
-
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"
   function removeFilter(filter: string, option: string): void {
     athenaFilters.get(filter)!.splice(athenaFilters.get(filter)!.indexOf(option), 1)
@@ -32,7 +25,8 @@
   }
 
   // A method to update the API filters applied on the API call for Athena
-  const filtering = async (event: Event, filter: string, option: string): Promise<void> => {
+  const filtering = async (e: CustomEvent): Promise<void> => {
+    const { event, filter, option } = e.detail
     let chosenFilter = athenaFilters.get(filter)
     const inputValue = (event.target as HTMLInputElement).checked
     // If the filter is checked, add it
@@ -60,19 +54,8 @@
       {#each Object.entries(filters) as [id, { name, altName, altNameFacet, options }], _}
         {#if facets && facets[altNameFacet]}
           {@const filter = { name, opts: { altName, altNameFacet, options } }}
-          <AthenaFilter {filter} bind:openedFilter color={colors[name.toLowerCase()]}>
-            <div slot="option" class="filter-option" let:option>
-              {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
-                {@const title = 'Activate/deactivate filter'}
-                {@const checked = checkFilter(name, altName, option)}
-                <input id={option} type="checkbox" {title} {checked} on:click={e => filtering(e, altName, option)} />
-                <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
-              {:else}
-                <input id={option} class="disabled" type="checkbox" disabled />
-                <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
-              {/if}
-            </div>
-          </AthenaFilter>
+          {@const color = colors[name.toLowerCase()]}
+          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} on:filtering={filtering} />
         {/if}
       {/each}
       <div class="activated-filters">
@@ -174,32 +157,6 @@
     margin: 0;
   }
 
-  .filter-option {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 1rem;
-    padding: 0 0 0 0.5rem;
-  }
-
-  input {
-    border: 1px solid #d8d8d8;
-  }
-
-  input:hover {
-    cursor: pointer;
-    border: 1px solid #bbbbbb;
-  }
-
-  input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #c5c5c5;
-  }
-
-  .filter-option-label {
-    max-width: 80%;
-  }
-
   .sidebar-right {
     height: initial;
     border-right: 1px solid lightgray;
@@ -220,9 +177,5 @@
 
   p {
     margin: 0;
-  }
-
-  .disabled {
-    color: lightgray;
   }
 </style>

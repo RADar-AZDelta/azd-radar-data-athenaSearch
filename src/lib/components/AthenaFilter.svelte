@@ -4,11 +4,15 @@
   import debounce from 'lodash.debounce'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import type { IOptions, IFilter } from '$lib/Types'
+  import { createEventDispatcher } from 'svelte'
 
   export let filter: IFilter, openedFilter: string, color: string
+  export let facets: Record<string, any>, athenaFilters: Map<string, string[]>
 
+  const dispatch = createEventDispatcher()
   let filterInput: string
   let filteredFilterOptions: IOptions = filter.opts
+  let sortedOptions = filter.opts.options.sort(sorting)
 
   // When the input (search for a filter) has changed
   const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
@@ -25,6 +29,23 @@
     const { altName, altNameFacet } = filter.opts
     filteredFilterOptions = { options: options, altName, altNameFacet }
   }
+
+  // A method to check if the filter is already applied to the API call
+  function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
+    const chosen = athenaFilters.get(filter) ?? athenaFilters.get(altName ?? '')
+    return chosen?.includes(option) ?? false
+  }
+
+  function sorting(a: any, b: any) {
+    const { altNameFacet } = filter.opts
+    const enableA = facets[altNameFacet].hasOwnProperty(a) && facets[altNameFacet][a] > 0
+    const enableB = facets[altNameFacet].hasOwnProperty(b) && facets[altNameFacet][b] > 0
+    if (enableA && !enableB) return -1
+    else if (!enableA && enableB) return 1
+    else return 0
+  }
+
+  const filtering = (event: Event, filter: string, option: string) => dispatch('filtering', { event, filter, option })
 </script>
 
 <div class="filter" class:open={openedFilter === filter.name}>
@@ -38,13 +59,32 @@
   {#if openedFilter === filter.name}
     <div class="filter-item">
       <div class="filter-input-container">
-        <input title="Search for filter" placeholder="Filter" bind:value={filterInput} on:input={onChange} />
+        <input class="filter-input" title="Search" placeholder="Filter" bind:value={filterInput} on:input={onChange} />
         <button class="filter-item-button" title="Remove input filter" on:click={removeInputFromFilter}>
           <SvgIcon id="x" />
         </button>
       </div>
-      {#each filteredFilterOptions.options as option}
-        <slot name="option" {option} />
+      {#each sortedOptions as option}
+        {@const { name } = filter}
+        {@const { altNameFacet, altName } = filter.opts}
+        <div class="filter-option">
+          {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
+            {@const title = 'Activate/deactivate filter'}
+            {@const checked = checkFilter(name, altName, option)}
+            <input
+              class="filter-option-input"
+              id={option}
+              type="checkbox"
+              {title}
+              {checked}
+              on:click={e => filtering(e, altName, option)}
+            />
+            <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
+          {:else}
+            <input class="filter-option-input disabled" id={option} type="checkbox" disabled />
+            <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
+          {/if}
+        </div>
       {/each}
     </div>
   {/if}
@@ -113,7 +153,7 @@
     gap: 0.5rem;
   }
 
-  input {
+  .filter-input {
     border-radius: 5px;
     width: 80%;
     max-width: 250px;
@@ -124,11 +164,11 @@
     border: 1px solid #d8d8d8;
   }
 
-  input:hover {
+  .filter-input:hover {
     border: 1px solid #bbbbbb;
   }
 
-  input:focus {
+  .filter-input:focus {
     outline: none;
     box-shadow: 0 0 0 2px #bbbbbb;
   }
@@ -150,5 +190,35 @@
 
   p {
     margin: 0;
+  }
+
+  .filter-option {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 0 0.5rem;
+  }
+
+  .filter-option-input {
+    border: 1px solid #d8d8d8;
+  }
+
+  .filter-option-input:hover {
+    cursor: pointer;
+    border: 1px solid #bbbbbb;
+  }
+
+  .filter-option-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .filter-option-label {
+    max-width: 80%;
+  }
+
+  .disabled {
+    color: lightgray;
   }
 </style>
