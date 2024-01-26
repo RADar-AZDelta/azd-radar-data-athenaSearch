@@ -19,7 +19,7 @@
 
 <div class="concept-choice">
   {#each expandedViews as view}
-    <button class="concept-choice-button">
+    <button class="concept-choice-button" class:selected={selection === view.viewSlot}>
       <input type="radio" bind:group={selection} id={view.value} value={view.viewSlot} />
       <label class="concept-choice-label" for={view.value}>{view.name}</label>
     </button>
@@ -67,5 +67,9 @@
     height: 100%;
     padding: 0.5rem 0;
     cursor: pointer;
+  }
+
+  .selected {
+    background-color: lightgray;
   }
 </style>
