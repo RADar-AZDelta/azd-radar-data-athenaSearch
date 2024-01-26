@@ -49,7 +49,7 @@
   
   $: {
     facets
-    sortedOptions = filter.opts.options.sort(sorting)
+    sortedOptions = filteredFilterOptions.options.sort(sorting)
   }
 </script>
 
