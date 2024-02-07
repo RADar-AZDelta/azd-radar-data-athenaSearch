@@ -42,11 +42,13 @@
     const enableB = facets[altNameFacet].hasOwnProperty(b) && facets[altNameFacet][b] > 0
     if (enableA && !enableB) return -1
     else if (!enableA && enableB) return 1
-    else return 0
+    else if (!enableA && !enableB) return 0
+    else if (a > b) return 1
+    else return -1
   }
 
   const filtering = (event: Event, filter: string, option: string) => dispatch('filtering', { event, filter, option })
-  
+
   $: {
     facets
     sortedOptions = filteredFilterOptions.options.sort(sorting)
