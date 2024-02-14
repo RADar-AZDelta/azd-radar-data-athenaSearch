@@ -1,6 +1,6 @@
 {
   "name": "@radar-azdelta/svelte-athena-search",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "repository": {
     "type": "git",
     "url": "https://github.com/RADar-AZDelta/svelte-Athena-search.git"
@@ -61,7 +61,7 @@
     "svelte": "^4.0.0"
   },
   "dependencies": {
-    "@radar-azdelta/svelte-datatable": "^0.0.67",
+    "@radar-azdelta/svelte-datatable": "^0.0.69",
     "@sveltejs/kit": "^2.0.0",
     "lodash.debounce": "^4.0.8"
   },
