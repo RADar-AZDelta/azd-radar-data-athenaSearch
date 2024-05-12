@@ -3,34 +3,25 @@
 <script lang="ts">
   import debounce from 'lodash.debounce'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import type { IOptions, IFilter } from '$lib/Types'
-  import { createEventDispatcher } from 'svelte'
+  import type { IOptions, IAthenaFilterProps } from '$lib/interfaces/Types'
 
-  export let filter: IFilter, openedFilter: string, color: string
-  export let facets: Record<string, any>, athenaFilters: Map<string, string[]>
+  let { filter, openedFilter = $bindable(), color, facets, athenaFilters, filtering }: IAthenaFilterProps = $props()
 
-  const dispatch = createEventDispatcher()
-  let filterInput: string
+  let filterInput: string = $state('')
   let filteredFilterOptions: IOptions = filter.opts
-  let sortedOptions = filter.opts.options.sort(sorting)
+  let sortedOptions: string[] = $state(filteredFilterOptions.options.sort(sorting))
 
-  // When the input (search for a filter) has changed
   const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
-
-  // Change the section that needs to be opened
   const showCategories = async () => (openedFilter = openedFilter === filter.name ? '' : filter.name)
-
-  // Remove the criteria from the input field to search for a filter
   const removeInputFromFilter = async (): Promise<any> => ((filterInput = ''), (filteredFilterOptions = filter.opts))
 
-  // A method to update the filters with a certain criteria
   const updateOptionsFromFilter = async (input: string): Promise<void> => {
     const options = filter.opts.options.filter(op => op.toLowerCase().includes(input.toLowerCase()))
     const { altName, altNameFacet } = filter.opts
     filteredFilterOptions = { options: options, altName, altNameFacet }
+    sortedOptions = filteredFilterOptions.options.sort(sorting)
   }
 
-  // A method to check if the filter is already applied to the API call
   function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     const chosen = athenaFilters.get(filter) ?? athenaFilters.get(altName ?? '')
     return chosen?.includes(option) ?? false
@@ -46,18 +37,12 @@
     else if (a > b) return 1
     else return -1
   }
-
-  const filtering = (event: Event, filter: string, option: string) => dispatch('filtering', { event, filter, option })
-
-  $: {
-    facets
-    sortedOptions = filteredFilterOptions.options.sort(sorting)
-  }
 </script>
 
 <div class="filter" class:open={openedFilter === filter.name}>
-  <button title="Open filter {filter.name}" class="filter-button" on:click={showCategories}>
+  <button title="Open filter {filter.name}" class="filter-button" onclick={showCategories}>
     <div class="filter-name">
+      <!-- svelte-ignore element_invalid_self_closing_tag -->
       <span class="filter-color" style={`background-color: ${color};`} />
       <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
     </div>
@@ -66,8 +51,8 @@
   {#if openedFilter === filter.name}
     <div class="filter-item">
       <div class="filter-input-container">
-        <input class="filter-input" title="Search" placeholder="Filter" bind:value={filterInput} on:input={onChange} />
-        <button class="filter-item-button" title="Remove input filter" on:click={removeInputFromFilter}>
+        <input class="filter-input" title="Search" placeholder="Filter" bind:value={filterInput} oninput={onChange} />
+        <button class="filter-item-button" title="Remove input filter" onclick={removeInputFromFilter}>
           <SvgIcon id="x" />
         </button>
       </div>
@@ -78,14 +63,7 @@
           {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
             {@const title = 'Activate/deactivate filter'}
             {@const checked = checkFilter(name, altName, option)}
-            <input
-              class="filter-option-input"
-              id={option}
-              type="checkbox"
-              {title}
-              {checked}
-              on:click={e => filtering(e, altName, option)}
-            />
+            <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filtering(e, altName, option)} />
             <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
           {:else}
             <input class="filter-option-input disabled" id={option} type="checkbox" disabled />

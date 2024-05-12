@@ -1,20 +1,16 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import type { CustomOptionsEvents, IView } from '$lib/Types'
+  import type { ISelectionProps, IView } from '$lib/interfaces/Types'
 
-  export let views: IView[] = []
+  let { views, changeView }: ISelectionProps = $props()
 
   const expandedViews: IView[] = [{ name: 'Athena concepts', value: 'athena', viewSlot: 0 }, ...views]
-  let selection: number = 0
+  let selection: number = $state(0)
 
-  const dispatch = createEventDispatcher<CustomOptionsEvents>()
-
-  $: {
-    selection
-    dispatch('viewChanged', { view: selection })
-  }
+  $effect(() => {
+    changeView(selection)
+  })
 </script>
 
 <div class="concept-choice">

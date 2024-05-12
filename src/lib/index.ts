@@ -1,7 +1,7 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
 import Search from '$lib/components/Search.svelte'
-import type { RowSelectedEventDetail, IView } from '$lib/Types'
+import type { IView } from '$lib/interfaces/Types'
 
 export { Search }
-export type { RowSelectedEventDetail, IView }
+export type { IView }

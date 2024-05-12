@@ -1,13 +1,7 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
 import { DataTypeCommonBase } from '@radar-azdelta/svelte-datatable'
-import type {
-  TFilter,
-  IDataTypeFunctionalities,
-  IRender,
-  SortDirection,
-  FetchDataFunc,
-} from '@radar-azdelta/svelte-datatable'
+import type { TFilter, IDataTypeFunctionalities, IRender, SortDirection, FetchDataFunc } from '@radar-azdelta/svelte-datatable'
 
 export class AthenaDataTypeImpl extends DataTypeCommonBase implements IDataTypeFunctionalities {
   async render(): Promise<IRender> {

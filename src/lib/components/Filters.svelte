@@ -1,18 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import filters from '$lib/config/filters.json'
-  import filterConfig from '$lib/config/filterConfig.json'
+  import Config from '$lib/helpers/Config'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
-  import type { CustomOptionsEvents } from '$lib/Types'
+  import type { IFilterProps } from '$lib/interfaces/Types'
 
-  export let facets: Record<string, any> | undefined, athenaFilters: Map<string, string[]>, show: boolean
+  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), updateFilters }: IFilterProps = $props()
 
-  const dispatch = createEventDispatcher<CustomOptionsEvents>()
-
-  let openedFilter: string
-  let colors: Record<string, string> = filterConfig.colors
-  let filterNames: Record<string, string> = filterConfig.names
+  let openedFilter: string = $state('')
+  let colors: Record<string, string> = Config.filterConfig.colors
+  let filterNames: Record<string, string> = Config.filterConfig.names
 
   const hideSide = async () => (show = false)
   const showSide = async () => (show = true)
@@ -20,13 +16,11 @@
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"
   function removeFilter(filter: string, option: string): void {
     athenaFilters.get(filter)!.splice(athenaFilters.get(filter)!.indexOf(option), 1)
-    athenaFilters = athenaFilters
-    dispatch('updateFilters', { athenaFilters })
+    updateFilters(athenaFilters)
   }
 
   // A method to update the API filters applied on the API call for Athena
-  const filtering = async (e: CustomEvent): Promise<void> => {
-    const { event, filter, option } = e.detail
+  const filtering = async (event: Event, filter: string, option: string): Promise<void> => {
     let chosenFilter = athenaFilters.get(filter)
     const inputValue = (event.target as HTMLInputElement).checked
     // If the filter is checked, add it
@@ -37,8 +31,7 @@
       if (!chosenFilter.length) athenaFilters.delete(filter)
       else athenaFilters.set(filter, chosenFilter)
     } else athenaFilters.set(filter, [option])
-    athenaFilters = athenaFilters
-    dispatch('updateFilters', { athenaFilters })
+    updateFilters(athenaFilters)
   }
 </script>
 
@@ -46,24 +39,24 @@
   <section class="filters-container">
     <div class="filters-head">
       <h2 class="filters-title">Filters</h2>
-      <button class="filters-button" on:click={hideSide} id="filters">
+      <button class="filters-button" onclick={hideSide} id="filters">
         <SvgIcon id="chevrons-left" />
       </button>
     </div>
     <div class="choice-filters">
-      {#each Object.entries(filters) as [id, { name, altName, altNameFacet, options }], _}
+      {#each Object.entries(Config.filters) as [id, { name, altName, altNameFacet, options }], _}
         {#if facets && facets[altNameFacet]}
           {@const filter = { name, opts: { altName, altNameFacet, options } }}
           {@const color = colors[name.toLowerCase()]}
-          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} on:filtering={filtering} />
+          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
         {/if}
       {/each}
       <div class="activated-filters">
-        {#each [...athenaFilters] as [filter, values], _}
+        {#each athenaFilters as [filter, values]}
           {#each values as value}
             {@const color = colors[filterNames[filter]]}
             <div class="activated-filter" id={value} style={`background-color: ${color}`}>
-              <button class="activated-filter-button" on:click={() => removeFilter(filter, value)}>
+              <button class="activated-filter-button" onclick={() => removeFilter(filter, value)}>
                 <SvgIcon id="x" />
               </button>
               <p class="activated-filter-name">{value}</p>
@@ -75,7 +68,7 @@
   </section>
 {:else}
   <div class="sidebar-right">
-    <button class="closed-bar" on:click={showSide}>
+    <button class="closed-bar" onclick={showSide}>
       <SvgIcon id="chevrons-right" />
       {#each 'FILTERS' as letter}
         <p>{letter}</p>

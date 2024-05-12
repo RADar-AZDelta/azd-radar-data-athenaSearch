@@ -2,11 +2,7 @@
 //SPDX-License-Identifier: gpl3+
 declare global {
   namespace App {}
-  namespace svelteHTML {
-    interface HTMLAttributes<T> {
-      'on:outClick'?: (event: CustomEvent) => void
-    }
-  }
+  namespace svelteHTML {}
 }
 
 export {}

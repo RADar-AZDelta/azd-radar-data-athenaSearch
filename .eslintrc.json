@@ -17,8 +17,7 @@
     // In some places, it needs to be of type "any"
     "@typescript-eslint/no-explicit-any": "off",
     "no-prototype-builtins": "off",
-    // Throws errors to use const when it's needed to use because of reassigning the var
-    "prefer-const": "off",
+    "prefer-const": "error",
     "no-undef": "off",
     "import/order": [
       "error",
