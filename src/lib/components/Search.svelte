@@ -105,8 +105,11 @@
       {/if}
       {#if viewSelection === 0}
         <div class="table-container">
-          <DataTable data={fetchData} columns={Config.columnsAthena} options={tableOpts} bind:this={table} let:renderedRow let:columns>
-            <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild}/>
+          <DataTable data={fetchData} columns={Config.columnsAthena} options={tableOpts} bind:this={table} >
+            <!-- Issue in getting the type of props from the svelte-datatable package -->
+            {#snippet rowChild(renderedRow: any, originalIndex: any, index: any, columns: any, option: any)}
+              <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild}/>
+            {/snippet}
           </DataTable>
         </div>
       {:else if viewSelection === 1 && firstView && firstView()}
