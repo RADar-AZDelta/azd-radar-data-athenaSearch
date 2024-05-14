@@ -12,15 +12,14 @@
 <section class="page-container">
   <h1>Svelte Athena Search</h1>
   <p>
-    We have created a component where we can search the Athena database for concepts. The reason for this component is
-    so we can use this in other projects where we need to search the Athena database. The layout is based on the design
-    of the webtool from Athena so that the users will have a familiar experience. It uses the <a
-      href="https://www.npmjs.com/package/@radar-azdelta/svelte-datatable">svelte-datatable package</a
-    > (also created by us), that is a easy to use and fast table component. This example shows a no config search component.
+    We have created a component where we can search the Athena database for concepts. The reason for this component is so we can use this in other projects
+    where we need to search the Athena database. The layout is based on the design of the webtool from Athena so that the users will have a familiar experience.
+    It uses the <a href="https://www.npmjs.com/package/@radar-azdelta/svelte-datatable">svelte-datatable package</a> (also created by us), that is a easy to use
+    and fast table component. This example shows a no config search component.
   </p>
   <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
-    <Search tableOptions={{rowsPerPageOptions: [10, 20, 100]}} />
+    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} />
   </div>
 </section>
 

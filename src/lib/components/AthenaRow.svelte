@@ -18,11 +18,11 @@
   {#if actionChild}
     {@render actionChild(renderedRow)}
   {:else}
-  <div data-name="actions-grid">
-    <button onclick={() => referToAthena(renderedRow)}>
-      <SvgIcon id="link" width={iconSize} height={iconSize} />
-    </button>
-  </div>
+    <div data-name="actions-grid">
+      <button onclick={() => referToAthena(renderedRow)}>
+        <SvgIcon id="link" width={iconSize} height={iconSize} />
+      </button>
+    </div>
   {/if}
 </td>
 {#if columns}

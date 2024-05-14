@@ -1,7 +1,7 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import debounce from 'lodash.debounce'
+  import { debounce } from '$lib/helpers/utils'
   import SvgIcon from '$lib/components/SvgIcon.svelte'
   import type { IOptions, IAthenaFilterProps } from '$lib/interfaces/Types'
 

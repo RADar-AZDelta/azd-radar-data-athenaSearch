@@ -3,6 +3,15 @@
 import type { IUrlAssembly } from '$lib/interfaces/Types'
 import type { IPagination } from '@radar-azdelta/svelte-datatable'
 
+export function debounce<T extends (...args: any[]) => any>(cb: T, wait: number) {
+  let h: any
+  const callable = (...args: any) => {
+    clearTimeout(h)
+    h = setTimeout(() => cb(...args), wait)
+  }
+  return <T>(<any>callable)
+}
+
 export async function assembleAthenaURL(assembly: IUrlAssembly): Promise<string> {
   const { apiFilters, columns, filter, sort, pagination, autoMap } = assembly
   let assembledAthenaUrl = 'https://athena.ohdsi.org/api/v1/concepts?'

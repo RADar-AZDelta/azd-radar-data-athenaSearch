@@ -13,7 +13,7 @@
 
   let {
     views = [],
-    globalFilter = { column: 'all', filter: undefined },
+    globalFilter = $bindable({ column: 'all', filter: undefined }),
     tableOptions,
     height = '100%',
     width = '100%',
@@ -25,7 +25,7 @@
     upperChild,
     firstView,
     secondView,
-    actionChild
+    actionChild,
   }: ISearchProps = $props()
 
   let table: DataTable | undefined = $state()
@@ -38,8 +38,8 @@
   let lastTypedFilter: string
   let lastChangedTyped: boolean = true
 
-  const rowSelected = async(row: Record<string, any>) => {
-    if(selectRow) selectRow(row)
+  const rowSelected = async (row: Record<string, any>) => {
+    if (selectRow) selectRow(row)
   }
   const updateFilters = async (filters: Map<string, string[]>) => {
     athenaFilters = new Map([...filters])
@@ -64,7 +64,7 @@
       if (!apiFilters.includes(substring)) apiFilters.push(substring.replaceAll(',', '&'))
     }
     // const url = await assembleAthenaURL(mappingUrl, apiFilters, Config.columnNames, filter, sort, pagination, false)
-    const url = await assembleAthenaURL({ apiFilters,columns: Config.columnNames,filter,sort,pagination })
+    const url = await assembleAthenaURL({ apiFilters, columns: Config.columnNames, filter, sort, pagination })
 
     const response = await fetch(url)
     const apiData = await response.json()
@@ -76,7 +76,7 @@
 
   export const getFilters = () => athenaFilters
   const triggerFetch = () => {
-    if(table) table.render()
+    if (table) table.render()
   }
 
   $effect(() => {
@@ -88,7 +88,7 @@
 </script>
 
 <div class="athena-layout" style={`--height: ${height}; --width: ${width}; --fontSize: ${fontSize};`}>
-  {#if leftChild && leftChild()}
+  {#if leftChild}
     <div class="leftslot">
       {@render leftChild()}
     </div>
@@ -96,7 +96,7 @@
     <Filters bind:athenaFilters bind:facets bind:show={showFilters} {updateFilters} />
   {/if}
   <section class="center-container">
-    {#if upperChild && upperChild()}
+    {#if upperChild}
       {@render upperChild()}
     {/if}
     <section class="athena-table">
@@ -105,21 +105,21 @@
       {/if}
       {#if viewSelection === 0}
         <div class="table-container">
-          <DataTable data={fetchData} columns={Config.columnsAthena} options={tableOpts} bind:this={table} >
+          <DataTable data={fetchData} columns={Config.columnsAthena} options={tableOpts} bind:this={table}>
             <!-- Issue in getting the type of props from the svelte-datatable package -->
             {#snippet rowChild(renderedRow: any, originalIndex: any, index: any, columns: any, option: any)}
-              <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild}/>
+              <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild} />
             {/snippet}
           </DataTable>
         </div>
-      {:else if viewSelection === 1 && firstView && firstView()}
+      {:else if viewSelection === 1 && firstView}
         {@render firstView()}
-      {:else if viewSelection === 2 && secondView && secondView()}
+      {:else if viewSelection === 2 && secondView}
         {@render secondView()}
       {/if}
     </section>
   </section>
-  {#if rightChild && rightChild()}
+  {#if rightChild}
     {@render rightChild()}
   {/if}
 </div>
