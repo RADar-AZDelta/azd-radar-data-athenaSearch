@@ -44,41 +44,43 @@
   }
 </script>
 
-<div class="filter" class:open={openedFilter === filter.name}>
-  <button title="Open filter {filter.name}" class="filter-button" onclick={showCategories}>
-    <div class="filter-name">
-      <!-- svelte-ignore element_invalid_self_closing_tag -->
-      <span class="filter-color" style={`background-color: ${color};`} />
-      <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
-    </div>
-    <SvgIcon id="updown" />
-  </button>
-  {#if openedFilter === filter.name}
-    <div class="filter-item">
-      <div class="filter-input-container">
-        <input class="filter-input" title="Search" placeholder="Filter" bind:value={filterInput} oninput={onChange} />
-        <button class="filter-item-button" title="Remove input filter" onclick={removeInputFromFilter}>
-          <SvgIcon id="x" />
-        </button>
+{#if filter.opts.options.length}
+  <div class="filter" class:open={openedFilter === filter.name}>
+    <button title="Open filter {filter.name}" class="filter-button" onclick={showCategories}>
+      <div class="filter-name">
+        <!-- svelte-ignore element_invalid_self_closing_tag -->
+        <span class="filter-color" style={`background-color: ${color};`} />
+        <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
       </div>
-      {#each sortedOptions as option}
-        {@const { name } = filter}
-        {@const { altNameFacet, altName } = filter.opts}
-        <div class="filter-option">
-          {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
-            {@const title = 'Activate/deactivate filter'}
-            {@const checked = checkFilter(name, altName, option)}
-            <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
-            <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
-          {:else}
-            <input class="filter-option-input disabled" id={option} type="checkbox" disabled />
-            <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
-          {/if}
+      <SvgIcon id="updown" />
+    </button>
+    {#if openedFilter === filter.name}
+      <div class="filter-item">
+        <div class="filter-input-container">
+          <input class="filter-input" title="Search" placeholder="Filter" bind:value={filterInput} oninput={onChange} />
+          <button class="filter-item-button" title="Remove input filter" onclick={removeInputFromFilter}>
+            <SvgIcon id="x" />
+          </button>
         </div>
-      {/each}
-    </div>
-  {/if}
-</div>
+        {#each sortedOptions as option}
+          {@const { name } = filter}
+          {@const { altNameFacet, altName } = filter.opts}
+          <div class="filter-option">
+            {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
+              {@const title = 'Activate/deactivate filter'}
+              {@const checked = checkFilter(name, altName, option)}
+              <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
+              <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
+            {:else}
+              <input class="filter-option-input disabled" id={option} type="checkbox" disabled />
+              <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .filter {

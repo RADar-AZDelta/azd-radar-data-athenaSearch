@@ -9,7 +9,7 @@
   import AthenaRow from '$lib/components/AthenaRow.svelte'
   import { AthenaDataTypeImpl } from '$lib/helpers/AthenaDataTypeImpl'
   import type { IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
-  import type { ISearchProps } from '$lib/interfaces/Types'
+  import type { IAthenaFilter, ISearchProps } from '$lib/interfaces/Types'
 
   let {
     views = [],
@@ -38,6 +38,7 @@
   let mainFilter: string | undefined = undefined
   let lastTypedFilter: string
   let lastChangedTyped: boolean = true
+  let filters: IAthenaFilter[] = $state([])
 
   const rowSelected = async (row: Record<string, any>) => {
     if (selectRow) selectRow(row)
@@ -80,11 +81,32 @@
     if (table) table.render()
   }
 
+  function setLimitedFilters() {
+    if (filters.length) return
+    filters = Config.filters.map(filter => {
+      const limitedFilter = limitedFilters.find(f => f.name === filter.name)
+      if (!limitedFilter) return filter
+      if (limitedFilter.value) addFilterIfNotSetYet(filter.altName, limitedFilter.value)
+      filter.options = limitedFilter.options
+      return filter
+    })
+    updateFilters(athenaFilters)
+  }
+
+  function addFilterIfNotSetYet(filter: string, value: string) {
+    const foundFilters = athenaFilters.get(filter)
+    if (!foundFilters) return athenaFilters.set(filter, [value])
+    const filterExists = foundFilters.includes(value)
+    if (filterExists) return
+    athenaFilters.set(filter, [...foundFilters, value])
+  }
+
   $effect(() => {
     globalFilter
     mainFilter = globalFilter.filter
     lastChangedTyped = false
     triggerFetch()
+    setLimitedFilters()
   })
 </script>
 
@@ -94,7 +116,7 @@
       {@render leftChild()}
     </div>
   {:else}
-    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {limitedFilters} {updateFilters} />
+    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {filters} {updateFilters} />
   {/if}
   <section class="center-container">
     {#if upperChild}

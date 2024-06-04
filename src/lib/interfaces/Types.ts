@@ -41,7 +41,7 @@ export interface IFilterProps {
   facets: Record<string, any> | undefined
   athenaFilters: Map<string, string[]>
   show: boolean
-  limitedFilters: ILimitedFilter[]
+  filters: IAthenaFilter[]
   updateFilters: (filters: Map<string, string[]>) => Promise<void>
 }
 
@@ -69,7 +69,7 @@ export interface ISearchProps {
   width?: string
   fontSize?: string
   showFilters?: boolean
-  limitedFilters?: ILimitedFilter[],
+  limitedFilters?: ILimitedFilter[]
   selectRow?: (row: Record<string, any>) => Promise<void>
   leftChild?: Snippet
   rightChild?: Snippet
@@ -92,4 +92,11 @@ export interface IUrlAssembly {
   sort?: [string, string]
   pagination?: IPagination
   autoMap?: boolean
+}
+
+export interface IAthenaFilter {
+  name: string
+  altName: string
+  altNameFacet: string
+  options: string[]
 }

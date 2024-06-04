@@ -4,7 +4,7 @@
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
   import type { IFilterProps } from '$lib/interfaces/Types'
 
-  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), limitedFilters, updateFilters }: IFilterProps = $props()
+  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), filters, updateFilters }: IFilterProps = $props()
 
   let openedFilter: string = $state('')
   let colors: Record<string, string> = Config.filterConfig.colors
@@ -32,13 +32,6 @@
     } else athenaFilters.set(filter, [option])
     updateFilters(athenaFilters)
   }
-
-  function createFilter(name: string, altName: string, altNameFacet: string, options: string[]) {
-    const limitedFilter = limitedFilters.find(filter => filter.name === name)
-    if (!limitedFilter) return { name, opts: { altName, altNameFacet, options } }
-    if (limitedFilter.value) filtering(true, name, limitedFilter.value)
-    return { name, opts: { altName, altNameFacet, options: limitedFilter.options } }
-  }
 </script>
 
 {#if show}
@@ -50,20 +43,18 @@
       </button>
     </div>
     <div class="choice-filters">
-      {#each Object.entries(Config.filters) as [id, { name, altName, altNameFacet, options }], _}
+      {#each filters as limitedFilter, _}
+        {@const { name, altName, altNameFacet, options } = limitedFilter}
         {#if facets && facets[altNameFacet]}
-          <!-- {@const filter = { name, opts: { altName, altNameFacet, options } }} -->
-          {@const filter = createFilter(name, altName, altNameFacet, options)}
+          {@const filter = { name, opts: { altName, altNameFacet, options } }}
           {@const color = colors[name.toLowerCase()]}
-          {#if filter.opts.options.length}
-            <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
-          {/if}
+          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
         {/if}
       {/each}
       <div class="activated-filters">
-        {#each athenaFilters as [filter, values]}
-          {#each values as value}
-            {@const color = colors[filterNames[filter]]}
+        {#each athenaFilters as [filter, values], _}
+          {#each values as value, i}
+            {@const color = colors[filterNames[filter]] ?? 'orange'}
             <div class="activated-filter" id={value} style={`background-color: ${color}`}>
               <button class="activated-filter-button" onclick={() => removeFilter(filter, value)}>
                 <SvgIcon id="x" />
