@@ -34,11 +34,10 @@
   let facets: Record<string, any> | undefined = $state()
   let athenaFilters = $state(new Map<string, string[]>([['standardConcept', ['Standard']]]))
   const defaultTableOpts = Object.assign(Config.defaultTableOptions, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
-  let tableOpts: ITableOptions = tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts
-  let mainFilter: string | undefined = undefined
-  let lastTypedFilter: string
-  let lastChangedTyped: boolean = true
+  let tableOpts = $state<ITableOptions>(tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts)
   let filters: IAthenaFilter[] = $state([])
+
+  let rerender = $state<boolean>(true)
 
   const rowSelected = async (row: Record<string, any>) => {
     if (selectRow) selectRow(row)
@@ -56,16 +55,13 @@
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
   async function fetchData(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
-    let filter = filters.values().next().value
-    if (lastTypedFilter !== filter) (lastTypedFilter = filter), (lastChangedTyped = true)
-    if (!lastChangedTyped) filter = mainFilter
+    let filter = tableOpts.globalFilter?.filter?.toString() ?? ''
     const sort = sorts.entries().next().value
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
       const substring = options.map(option => `&${filter}=${option}`).join()
       if (!apiFilters.includes(substring)) apiFilters.push(substring.replaceAll(',', '&'))
     }
-    // const url = await assembleAthenaURL(mappingUrl, apiFilters, Config.columnNames, filter, sort, pagination, false)
     const url = await assembleAthenaURL({ apiFilters, columns: Config.columnNames, filter, sort, pagination })
 
     const response = await fetch(url)
@@ -78,7 +74,10 @@
 
   export const getFilters = () => athenaFilters
   const triggerFetch = () => {
-    if (table) table.render()
+    if (table) {
+      table.render()
+      rerender = false
+    }
   }
 
   function setLimitedFilters() {
@@ -101,12 +100,29 @@
     athenaFilters.set(filter, [...foundFilters, value])
   }
 
+  const setFilter = (filter?: string) => {
+    tableOpts.globalFilter!.filter = filter
+    rerender = true
+  }
+
+  const updateGlobalFilter = (opt: ITableOptions) => {
+    if (globalFilter.filter) globalFilter.filter = opt.globalFilter?.filter?.toString() ?? ''
+  }
+
   $effect(() => {
-    globalFilter
-    mainFilter = globalFilter.filter
-    lastChangedTyped = false
-    triggerFetch()
+    if (rerender) triggerFetch()
+  })
+
+  $effect(() => {
     setLimitedFilters()
+  })
+
+  $effect(() => {
+    setFilter(globalFilter.filter)
+  })
+
+  $effect(() => {
+    updateGlobalFilter(tableOpts)
   })
 </script>
 
@@ -128,7 +144,7 @@
       {/if}
       {#if viewSelection === 0}
         <div class="table-container">
-          <DataTable data={fetchData} columns={Config.columnsAthena} options={tableOpts} bind:this={table}>
+          <DataTable data={fetchData} columns={Config.columnsAthena} bind:options={tableOpts} bind:this={table}>
             <!-- Issue in getting the type of props from the svelte-datatable package -->
             {#snippet rowChild(renderedRow: any, originalIndex: any, index: any, columns: any, option: any)}
               <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild} />
