@@ -26,7 +26,7 @@ export interface IAthenaFilterProps {
   color: string
   facets: Record<string, any>
   athenaFilters: Map<string, string[]>
-  filtering: (event: Event, filter: string, option: string) => Promise<void>
+  filtering: (checked: boolean, filter: string, option: string) => Promise<void>
 }
 
 export interface IAthenaRowProps {
@@ -41,6 +41,7 @@ export interface IFilterProps {
   facets: Record<string, any> | undefined
   athenaFilters: Map<string, string[]>
   show: boolean
+  limitedFilters: ILimitedFilter[]
   updateFilters: (filters: Map<string, string[]>) => Promise<void>
 }
 
@@ -68,6 +69,7 @@ export interface ISearchProps {
   width?: string
   fontSize?: string
   showFilters?: boolean
+  limitedFilters?: ILimitedFilter[],
   selectRow?: (row: Record<string, any>) => Promise<void>
   leftChild?: Snippet
   rightChild?: Snippet
@@ -75,6 +77,12 @@ export interface ISearchProps {
   firstView?: Snippet
   secondView?: Snippet
   actionChild?: Snippet<[renderedRow: Record<string, any>]>
+}
+
+export interface ILimitedFilter {
+  name: string
+  options: string[]
+  value?: string
 }
 
 export interface IUrlAssembly {

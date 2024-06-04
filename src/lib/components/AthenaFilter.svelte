@@ -37,6 +37,11 @@
     else if (a > b) return 1
     else return -1
   }
+
+  function filterTable(e: Event, altName: string, option: string) {
+    const checked = (e.target as HTMLInputElement).checked
+    filtering(checked, altName, option)
+  }
 </script>
 
 <div class="filter" class:open={openedFilter === filter.name}>
@@ -63,7 +68,7 @@
           {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
             {@const title = 'Activate/deactivate filter'}
             {@const checked = checkFilter(name, altName, option)}
-            <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filtering(e, altName, option)} />
+            <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
             <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
           {:else}
             <input class="filter-option-input disabled" id={option} type="checkbox" disabled />

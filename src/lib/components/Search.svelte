@@ -19,6 +19,7 @@
     width = '100%',
     fontSize = '10px',
     showFilters = false,
+    limitedFilters = [],
     selectRow,
     leftChild,
     rightChild,
@@ -93,7 +94,7 @@
       {@render leftChild()}
     </div>
   {:else}
-    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {updateFilters} />
+    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {limitedFilters} {updateFilters} />
   {/if}
   <section class="center-container">
     {#if upperChild}

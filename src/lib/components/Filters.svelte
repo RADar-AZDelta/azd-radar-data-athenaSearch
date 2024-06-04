@@ -4,7 +4,7 @@
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
   import type { IFilterProps } from '$lib/interfaces/Types'
 
-  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), updateFilters }: IFilterProps = $props()
+  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), limitedFilters, updateFilters }: IFilterProps = $props()
 
   let openedFilter: string = $state('')
   let colors: Record<string, string> = Config.filterConfig.colors
@@ -20,18 +20,24 @@
   }
 
   // A method to update the API filters applied on the API call for Athena
-  const filtering = async (event: Event, filter: string, option: string): Promise<void> => {
+  const filtering = async (checked: boolean, filter: string, option: string): Promise<void> => {
     let chosenFilter = athenaFilters.get(filter)
-    const inputValue = (event.target as HTMLInputElement).checked
     // If the filter is checked, add it
-    if (chosenFilter && inputValue) chosenFilter.push(option)
-    else if (chosenFilter && !inputValue && chosenFilter.includes(option)) {
+    if (chosenFilter && checked) chosenFilter.push(option)
+    else if (chosenFilter && !checked && chosenFilter.includes(option)) {
       // If the filter is unchecked and was already in the list, remove it
       chosenFilter.splice(chosenFilter.indexOf(option), 1)
       if (!chosenFilter.length) athenaFilters.delete(filter)
       else athenaFilters.set(filter, chosenFilter)
     } else athenaFilters.set(filter, [option])
     updateFilters(athenaFilters)
+  }
+
+  function createFilter(name: string, altName: string, altNameFacet: string, options: string[]) {
+    const limitedFilter = limitedFilters.find(filter => filter.name === name)
+    if (!limitedFilter) return { name, opts: { altName, altNameFacet, options } }
+    if (limitedFilter.value) filtering(true, name, limitedFilter.value)
+    return { name, opts: { altName, altNameFacet, options: limitedFilter.options } }
   }
 </script>
 
@@ -46,9 +52,12 @@
     <div class="choice-filters">
       {#each Object.entries(Config.filters) as [id, { name, altName, altNameFacet, options }], _}
         {#if facets && facets[altNameFacet]}
-          {@const filter = { name, opts: { altName, altNameFacet, options } }}
+          <!-- {@const filter = { name, opts: { altName, altNameFacet, options } }} -->
+          {@const filter = createFilter(name, altName, altNameFacet, options)}
           {@const color = colors[name.toLowerCase()]}
-          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
+          {#if filter.opts.options.length}
+            <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
+          {/if}
         {/if}
       {/each}
       <div class="activated-filters">
