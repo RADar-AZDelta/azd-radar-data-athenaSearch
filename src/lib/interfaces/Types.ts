@@ -42,6 +42,7 @@ export interface IFilterProps {
   athenaFilters: Map<string, string[]>
   show: boolean
   filters: IAthenaFilter[]
+  limitedFilters: ILimitedFilter[]
   updateFilters: (filters: Map<string, string[]>) => Promise<void>
 }
 

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Domain",
+    "altName": "domain",
+    "altNameFacet": "domain_id"
+  },
+  {
+    "name": "Concept",
+    "altName": "standardConcept",
+    "altNameFacet": "standard_concept"
+  },
+  {
+    "name": "Class",
+    "altName": "conceptClass",
+    "altNameFacet": "concept_class_id"
+  },
+  {
+    "name": "Vocab",
+    "altName": "Vocabulary",
+    "altNameFacet": "vocabulary_id"
+  },
+  {
+    "name": "Validity",
+    "altName": "invalidReason",
+    "altNameFacet": "invalid_reason"
+  }
+]

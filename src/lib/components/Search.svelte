@@ -116,7 +116,7 @@
       {@render leftChild()}
     </div>
   {:else}
-    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {filters} {updateFilters} />
+    <Filters bind:athenaFilters bind:facets bind:show={showFilters} {filters} {limitedFilters} {updateFilters} />
   {/if}
   <section class="center-container">
     {#if upperChild}

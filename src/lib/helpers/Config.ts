@@ -1,4 +1,5 @@
 import filters from '$lib/constants/filters.json'
+import filterNames from '$lib/constants/filterNames.json'
 import columnNames from '$lib/constants/columnNames.json'
 import filterConfig from '$lib/constants/filterConfig.json'
 import columnsAthena from '$lib/constants/columnsAthena.json'
@@ -10,4 +11,5 @@ export default class Config {
   static defaultTableOptions = defaultTableOptions
   static filterConfig = filterConfig
   static filters = filters
+  static filterNames = filterNames
 }

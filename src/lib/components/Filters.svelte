@@ -4,7 +4,7 @@
   import AthenaFilter from '$lib/components/AthenaFilter.svelte'
   import type { IFilterProps } from '$lib/interfaces/Types'
 
-  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), filters, updateFilters }: IFilterProps = $props()
+  let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), filters, limitedFilters, updateFilters }: IFilterProps = $props()
 
   let openedFilter: string = $state('')
   let colors: Record<string, string> = Config.filterConfig.colors
@@ -14,9 +14,16 @@
   const showSide = async () => (show = true)
 
   // A method to delete a filter when a filter for the Athena API call is removed in the section "Activated filters"
-  function removeFilter(filter: string, option: string): void {
+  function removeFilter(filter: string, option: string, cantDelete: boolean): void {
+    if (cantDelete) return
     athenaFilters.get(filter)!.splice(athenaFilters.get(filter)!.indexOf(option), 1)
     updateFilters(athenaFilters)
+  }
+
+  const isFilterDeletable = (filter: string, option: string) => {
+    const name = Config.filterNames.find(f => f.altName === filter)?.name ?? ''
+    const isTheFilterLimited = limitedFilters.some(f => f.name === name && f.value == option)
+    return isTheFilterLimited
   }
 
   // A method to update the API filters applied on the API call for Athena
@@ -54,11 +61,17 @@
       <div class="activated-filters">
         {#each athenaFilters as [filter, values], _}
           {#each values as value, i}
+            {@const cantDelete = isFilterDeletable(filter, value)}
             {@const color = colors[filterNames[filter]] ?? 'orange'}
             <div class="activated-filter" id={value} style={`background-color: ${color}`}>
-              <button class="activated-filter-button" onclick={() => removeFilter(filter, value)}>
-                <SvgIcon id="x" />
-              </button>
+              {#if !cantDelete}
+                <button class="activated-filter-button" onclick={() => removeFilter(filter, value, cantDelete)}>
+                  <SvgIcon id="x" />
+                </button>
+              {:else}
+                <!-- svelte-ignore element_invalid_self_closing_tag -->
+                <span class="space" />
+              {/if}
               <p class="activated-filter-name">{value}</p>
             </div>
           {/each}
@@ -144,6 +157,10 @@
   .activated-filter-button:focus {
     outline: none;
     box-shadow: 0 0 0 2px #c5c5c5;
+  }
+
+  .space {
+    width: 1rem;
   }
 
   .activated-filter-name {
