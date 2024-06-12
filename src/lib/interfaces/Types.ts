@@ -83,6 +83,7 @@ export interface ISearchProps {
 export interface ILimitedFilter {
   name: string
   options: string[]
+  exclude?: boolean
   value?: string
 }
 

@@ -86,7 +86,7 @@
       const limitedFilter = limitedFilters.find(f => f.name === filter.name)
       if (!limitedFilter) return filter
       if (limitedFilter.value) addFilterIfNotSetYet(filter.altName, limitedFilter.value)
-      filter.options = limitedFilter.options
+      filter.options = setFiltersWithLimitation(limitedFilter.options, filter.options, limitedFilter.exclude ?? false)
       return filter
     })
     updateFilters(athenaFilters)
@@ -98,6 +98,12 @@
     const filterExists = foundFilters.includes(value)
     if (filterExists) return
     athenaFilters.set(filter, [...foundFilters, value])
+  }
+
+  function setFiltersWithLimitation(options: string[], originalOptions: string[], exclude: boolean) {
+    if(!exclude) return options
+    const filteredOptions = originalOptions.filter(opt => !options.includes(opt))
+    return filteredOptions
   }
 
   const setFilter = (filter?: string) => {

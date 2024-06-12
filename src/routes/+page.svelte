@@ -2,6 +2,32 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import Search from '$lib/components/Search.svelte'
+  import type { ILimitedFilter, ITableFilter } from '$lib/interfaces/Types'
+
+  const limitedFilters: ILimitedFilter[] = [
+    {
+      name: 'Concept',
+      value: 'Standard',
+      options: [],
+    },
+    {
+      name: 'Validity',
+      value: 'Valid',
+      options: [],
+    },
+    {
+      name: 'Vocab',
+      options: [
+        "LOINC",
+        "GGR"
+      ],
+      exclude: true
+    }
+  ]
+
+  let globalFilter: ITableFilter = { column: 'all', filter: 'Andorra' }
+
+  // const limitedFilters = []
 </script>
 
 <svelte:head>
@@ -19,7 +45,7 @@
   </p>
   <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
-    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} />
+    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} {limitedFilters} bind:globalFilter />
   </div>
 </section>
 
