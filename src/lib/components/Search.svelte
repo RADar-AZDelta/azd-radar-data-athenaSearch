@@ -20,6 +20,7 @@
     fontSize = '10px',
     showFilters = false,
     limitedFilters = [],
+    facets = $bindable({}),
     fetchData,
     selectRow,
     leftChild,
@@ -32,7 +33,6 @@
 
   let table: DataTable | undefined = $state()
   let viewSelection: number = $state(0)
-  let facets: Record<string, any> | undefined = $state()
   let athenaFilters = $state(new Map<string, string[]>([['standardConcept', ['Standard']]]))
   const defaultTableOpts = Object.assign(Config.defaultTableOptions, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
   let tableOpts = $state<ITableOptions>(tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts)

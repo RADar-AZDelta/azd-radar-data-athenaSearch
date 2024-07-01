@@ -71,6 +71,7 @@ export interface ISearchProps {
   fontSize?: string
   showFilters?: boolean
   limitedFilters?: ILimitedFilter[]
+  facets?: Record<string, any>
   fetchData?: (
     filter: string | undefined,
     columns: Record<string, string>,
