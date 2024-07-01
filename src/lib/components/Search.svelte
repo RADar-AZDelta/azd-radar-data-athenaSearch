@@ -20,7 +20,7 @@
     fontSize = '10px',
     showFilters = false,
     limitedFilters = [],
-    fetchData = defaultFetchData,
+    fetchData,
     selectRow,
     leftChild,
     rightChild,
@@ -55,9 +55,10 @@
   // METHODS
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  async function defaultFetchData(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
+  async function fetchSource(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
     let filter = tableOpts.globalFilter?.filter?.toString() ?? ''
     const sort = sorts.entries().next().value
+    if (fetchData) return await fetchData(filter, Config.columnNames, athenaFilters, sorts, pagination)
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
       const substring = options.map(option => `&${filter}=${option}`).join()
@@ -151,7 +152,7 @@
       {/if}
       {#if viewSelection === 0}
         <div class="table-container">
-          <DataTable data={fetchData} columns={Config.columnsAthena} bind:options={tableOpts} bind:this={table}>
+          <DataTable data={fetchSource} columns={Config.columnsAthena} bind:options={tableOpts} bind:this={table}>
             <!-- Issue in getting the type of props from the svelte-datatable package -->
             {#snippet rowChild(renderedRow: any, originalIndex: any, index: any, columns: any, option: any)}
               <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild} />

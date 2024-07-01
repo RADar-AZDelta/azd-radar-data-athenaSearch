@@ -72,7 +72,9 @@ export interface ISearchProps {
   showFilters?: boolean
   limitedFilters?: ILimitedFilter[]
   fetchData?: (
-    filters: Map<String, TFilter>,
+    filter: string | undefined,
+    columns: Record<string, string>,
+    athenaFilters: Map<string, string[]>,
     sorts: Map<string, SortDirection>,
     pagination: IPagination,
   ) => Promise<{

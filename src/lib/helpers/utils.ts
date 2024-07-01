@@ -12,9 +12,9 @@ export function debounce<T extends (...args: any[]) => any>(cb: T, wait: number)
   return <T>(<any>callable)
 }
 
-export async function assembleAthenaURL(assembly: IUrlAssembly): Promise<string> {
+export async function assembleAthenaURL(assembly: IUrlAssembly, baseUrl: string = 'https://athena.ohdsi.org/api/v1/concepts?'): Promise<string> {
   const { apiFilters, columns, filter, sort, pagination, autoMap } = assembly
-  let assembledAthenaUrl = 'https://athena.ohdsi.org/api/v1/concepts?'
+  let assembledAthenaUrl = baseUrl
   assembledAthenaUrl = await addApiFiltersToUrl(assembledAthenaUrl, apiFilters)
   assembledAthenaUrl = await addSortingToUrl(assembledAthenaUrl, sort, columns)
   assembledAthenaUrl = await addQueryFilterToUrl(assembledAthenaUrl, filter)
