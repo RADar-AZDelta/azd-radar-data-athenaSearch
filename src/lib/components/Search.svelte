@@ -20,6 +20,7 @@
     fontSize = '10px',
     showFilters = false,
     limitedFilters = [],
+    fetchData = defaultFetchData,
     selectRow,
     leftChild,
     rightChild,
@@ -54,7 +55,7 @@
   // METHODS
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  async function fetchData(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
+  async function defaultFetchData(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
     let filter = tableOpts.globalFilter?.filter?.toString() ?? ''
     const sort = sorts.entries().next().value
     let apiFilters: string[] = []
@@ -101,7 +102,7 @@
   }
 
   function setFiltersWithLimitation(options: string[], originalOptions: string[], exclude: boolean) {
-    if(!exclude) return options
+    if (!exclude) return options
     const filteredOptions = originalOptions.filter(opt => !options.includes(opt))
     return filteredOptions
   }

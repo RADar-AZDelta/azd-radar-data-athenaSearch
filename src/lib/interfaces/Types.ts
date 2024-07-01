@@ -1,6 +1,6 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
-import type { IColumnMetaData, IPagination, ITableOptions } from '@radar-azdelta/svelte-datatable'
+import type { IColumnMetaData, IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
 import type { Snippet } from 'svelte'
 
 export interface IOptions {
@@ -71,6 +71,14 @@ export interface ISearchProps {
   fontSize?: string
   showFilters?: boolean
   limitedFilters?: ILimitedFilter[]
+  fetchData?: (
+    filters: Map<String, TFilter>,
+    sorts: Map<string, SortDirection>,
+    pagination: IPagination,
+  ) => Promise<{
+    data: any
+    totalRows: any
+  }>
   selectRow?: (row: Record<string, any>) => Promise<void>
   leftChild?: Snippet
   rightChild?: Snippet
