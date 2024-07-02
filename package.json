@@ -1,6 +1,6 @@
 {
   "name": "@radar-azdelta/svelte-athena-search",
-  "version": "0.0.47",
+  "version": "0.0.48",
   "repository": {
     "type": "git",
     "url": "https://github.com/RADar-AZDelta/svelte-Athena-search.git"
@@ -35,28 +35,28 @@
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
-    "@sveltejs/adapter-static": "^3.0.1",
-    "@sveltejs/package": "^2.3.1",
-    "@sveltejs/vite-plugin-svelte": "^3.1.0",
-    "@typescript-eslint/eslint-plugin": "^7.9.0",
-    "@typescript-eslint/parser": "^7.9.0",
-    "eslint": "^8.28.0",
+    "@sveltejs/adapter-static": "^3.0.2",
+    "@sveltejs/package": "^2.3.2",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-svelte": "^2.39.0",
-    "prettier": "^3.2.5",
-    "prettier-plugin-svelte": "^3.2.3",
-    "publint": "^0.2.7",
-    "sass": "^1.77.1",
+    "eslint-plugin-svelte": "^2.41.0",
+    "prettier": "^3.3.2",
+    "prettier-plugin-svelte": "^3.2.5",
+    "publint": "^0.2.8",
+    "sass": "^1.77.6",
     "svelte": "5.0.0-next.127",
-    "svelte-check": "^3.7.1",
-    "tslib": "^2.6.2",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "svelte-check": "^3.8.4",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.2"
   },
   "dependencies": {
-    "@radar-azdelta/svelte-datatable": "^0.0.84",
-    "@sveltejs/kit": "^2.5.8"
+    "@radar-azdelta/svelte-datatable": "^0.0.88",
+    "@sveltejs/kit": "^2.5.18"
   },
   "type": "module"
 }
