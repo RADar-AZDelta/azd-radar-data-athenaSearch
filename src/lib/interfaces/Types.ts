@@ -94,6 +94,7 @@ export interface ISearchProps {
 export interface ILimitedFilter {
   name: string
   options: string[]
+  deletable?: boolean
   exclude?: boolean
   value?: string
 }

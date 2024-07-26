@@ -22,7 +22,7 @@
 
   const isFilterDeletable = (filter: string, option: string) => {
     const name = Config.filterNames.find(f => f.altName === filter)?.name ?? ''
-    const isTheFilterLimited = limitedFilters.some(f => f.name === name && f.value == option)
+    const isTheFilterLimited = limitedFilters.some(f => f.name === name && f.value == option && f.deletable === false)
     return isTheFilterLimited
   }
 
