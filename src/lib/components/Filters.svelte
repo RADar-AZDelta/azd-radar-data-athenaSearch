@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Config from '$lib/helpers/Config'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import AthenaFilter from '$lib/components/AthenaFilter.svelte'
-  import type { IFilterProps } from '$lib/interfaces/Types'
+  import Config from '../helpers/Config'
+  import SvgIcon from '../components/SvgIcon.svelte'
+  import AthenaFilter from '../components/AthenaFilter.svelte'
+  import type { IFilterProps } from '../interfaces/Types'
 
   let { facets = $bindable(), athenaFilters = $bindable(), show = $bindable(), filters, limitedFilters, updateFilters }: IFilterProps = $props()
 

@@ -1,9 +1,9 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import { debounce } from '$lib/helpers/utils'
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import type { IOptions, IAthenaFilterProps } from '$lib/interfaces/Types'
+  import { debounce } from '../helpers/utils'
+  import SvgIcon from '../components/SvgIcon.svelte'
+  import type { IOptions, IAthenaFilterProps } from '../interfaces/Types'
 
   let { filter, openedFilter = $bindable(), color, facets, athenaFilters, filtering }: IAthenaFilterProps = $props()
 

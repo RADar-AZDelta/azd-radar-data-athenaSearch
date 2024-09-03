@@ -2,14 +2,14 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import DataTable from '@radar-azdelta/svelte-datatable'
-  import Config from '$lib/helpers/Config'
-  import Filters from '$lib/components/Filters.svelte'
-  import { assembleAthenaURL } from '$lib/helpers/utils'
-  import Selection from '$lib/components/Selection.svelte'
-  import AthenaRow from '$lib/components/AthenaRow.svelte'
-  import { AthenaDataTypeImpl } from '$lib/helpers/AthenaDataTypeImpl'
+  import Config from '../helpers/Config'
+  import Filters from '../components/Filters.svelte'
+  import { assembleAthenaURL } from '../helpers/utils'
+  import Selection from '../components/Selection.svelte'
+  import AthenaRow from '../components/AthenaRow.svelte'
+  import { AthenaDataTypeImpl } from '../helpers/AthenaDataTypeImpl'
   import type { IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
-  import type { IAthenaFilter, ISearchProps } from '$lib/interfaces/Types'
+  import type { IAthenaFilter, ISearchProps } from '../interfaces/Types'
 
   let {
     views = [],

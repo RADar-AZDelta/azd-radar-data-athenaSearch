@@ -1,8 +1,8 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import SvgIcon from '$lib/components/SvgIcon.svelte'
-  import type { IAthenaRowProps } from '$lib/interfaces/Types'
+  import SvgIcon from '../components/SvgIcon.svelte'
+  import type { IAthenaRowProps } from '../interfaces/Types'
 
   let { renderedRow, columns, iconSize, selectRow, actionChild }: IAthenaRowProps = $props()
 

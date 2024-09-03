@@ -1,7 +1,7 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import type { ISelectionProps, IView } from '$lib/interfaces/Types'
+  import type { ISelectionProps, IView } from '../interfaces/Types'
 
   let { views, changeView }: ISelectionProps = $props()
 

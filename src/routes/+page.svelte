@@ -1,8 +1,8 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import Search from '$lib/components/Search.svelte'
-  import type { ILimitedFilter, ITableFilter } from '$lib/interfaces/Types'
+  import Search from '../components/Search.svelte'
+  import type { ILimitedFilter, ITableFilter } from '../interfaces/Types'
 
   const limitedFilters: ILimitedFilter[] = [
     {
@@ -17,12 +17,9 @@
     },
     {
       name: 'Vocab',
-      options: [
-        "LOINC",
-        "GGR"
-      ],
-      exclude: true
-    }
+      options: ['LOINC', 'GGR'],
+      exclude: true,
+    },
   ]
 
   let globalFilter: ITableFilter = { column: 'all', filter: 'Andorra' }
