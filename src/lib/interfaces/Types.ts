@@ -89,6 +89,9 @@ export interface ISearchProps {
   firstView?: Snippet
   secondView?: Snippet
   actionChild?: Snippet<[renderedRow: Record<string, any>]>
+  getVocabularies: () => Promise<Record<string, any>>
+  getDomains: () => Promise<Record<string, any>>
+  getConceptClasses: () => Promise<Record<string, any>>
 }
 
 export interface ILimitedFilter {

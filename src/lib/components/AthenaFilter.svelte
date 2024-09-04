@@ -11,6 +11,8 @@
   let filteredFilterOptions: IOptions = filter.opts
   let sortedOptions: string[] = $state(filteredFilterOptions.options.sort(sorting))
 
+  $inspect(sortedOptions)
+
   const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
   const showCategories = async () => (openedFilter = openedFilter === filter.name ? '' : filter.name)
   const removeInputFromFilter = async (): Promise<any> => ((filterInput = ''), (filteredFilterOptions = filter.opts))
@@ -28,13 +30,13 @@
   }
 
   function sorting(a: any, b: any) {
-    const { altNameFacet } = filter.opts
-    const enableA = facets[altNameFacet].hasOwnProperty(a) && facets[altNameFacet][a] > 0
-    const enableB = facets[altNameFacet].hasOwnProperty(b) && facets[altNameFacet][b] > 0
-    if (enableA && !enableB) return -1
-    else if (!enableA && enableB) return 1
-    else if (!enableA && !enableB) return 0
-    else if (a > b) return 1
+    //const { altNameFacet } = filter.opts
+    // const enableA = facets[altNameFacet].hasOwnProperty(a) && facets[altNameFacet][a] > 0
+    // const enableB = facets[altNameFacet].hasOwnProperty(b) && facets[altNameFacet][b] > 0
+    // if (enableA && !enableB) return -1
+    // else if (!enableA && enableB) return 1
+    // else if (!enableA && !enableB) return 0
+    /*else*/ if (a > b) return 1
     else return -1
   }
 
@@ -65,16 +67,17 @@
         {#each sortedOptions as option}
           {@const { name } = filter}
           {@const { altNameFacet, altName } = filter.opts}
+          {@const title = 'Activate/deactivate filter'}
+          {@const checked = checkFilter(name, altName, option)}
           <div class="filter-option">
-            {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0}
-              {@const title = 'Activate/deactivate filter'}
-              {@const checked = checkFilter(name, altName, option)}
-              <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
-              <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
-            {:else}
+            <!-- {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0} -->
+
+            <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
+            <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
+            <!-- {:else}
               <input class="filter-option-input disabled" id={option} type="checkbox" disabled />
               <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
-            {/if}
+            {/if} -->
           </div>
         {/each}
       </div>

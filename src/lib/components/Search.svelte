@@ -29,6 +29,9 @@
     firstView,
     secondView,
     actionChild,
+    getVocabularies,
+    getDomains,
+    getConceptClasses,
   }: ISearchProps = $props()
 
   let table: DataTable | undefined = $state()
@@ -82,9 +85,25 @@
     }
   }
 
-  function setLimitedFilters() {
+  // TODO: clean this up
+  async function setLimitedFilters() {
     if (filters.length) return
+
+    const [vocabularies, domains, conceptClasses] = await Promise.all([getVocabularies(), getDomains(), getConceptClasses()])
+
     filters = Config.filters.map(filter => {
+      switch (filter.name) {
+        case 'Domain':
+          filter.options = domains.map(c => c.domain_id)
+          break
+        case 'Class':
+          filter.options = conceptClasses.map(d => d.concept_class_id)
+          break
+        case 'Vocab':
+          filter.options = vocabularies.map(v => v.vocabulary_id)
+          break
+      }
+
       const limitedFilter = limitedFilters.find(f => f.name === filter.name)
       if (!limitedFilter) return filter
       if (limitedFilter.value) addFilterIfNotSetYet(filter.altName, limitedFilter.value)
