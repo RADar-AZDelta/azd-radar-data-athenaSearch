@@ -10,7 +10,7 @@
     "domain": "domain",
     "standardConcept": "concept",
     "conceptClass": "class",
-    "Vocabulary": "vocab",
+    "vocabulary": "vocab",
     "invalidReason": "validity"
   }
 }

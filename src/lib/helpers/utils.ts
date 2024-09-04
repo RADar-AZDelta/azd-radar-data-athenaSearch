@@ -24,7 +24,8 @@ export async function assembleAthenaURL(assembly: IUrlAssembly, baseUrl: string 
 
 async function addApiFiltersToUrl(url: string, apiFilters: string[] | undefined): Promise<string> {
   if (!apiFilters) return url
-  for (const filter of apiFilters) url += filter
+  url += apiFilters.join('&')
+  // for (const filter of apiFilters) url += filter
   return url
 }
 

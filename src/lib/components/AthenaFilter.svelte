@@ -52,7 +52,7 @@
       <div class="filter-name">
         <!-- svelte-ignore element_invalid_self_closing_tag -->
         <span class="filter-color" style={`background-color: ${color};`} />
-        <p>{filter.name !== 'Vocab' ? filter.name : filter.opts.altName}</p>
+        <p>{filter.name !== 'Vocab' ? filter.name : 'Vocabulary'}</p>
       </div>
       <SvgIcon id="updown" />
     </button>
