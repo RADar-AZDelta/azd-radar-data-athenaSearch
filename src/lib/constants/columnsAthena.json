@@ -36,5 +36,10 @@
     "id": "score",
     "filterable": false,
     "visible": false
+  },
+  {
+    "id": "nbr_used",
+    "filterable": false,
+    "visible": false
   }
 ]
