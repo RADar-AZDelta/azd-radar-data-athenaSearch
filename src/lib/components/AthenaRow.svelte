@@ -27,7 +27,7 @@
 </td>
 {#if columns}
   {#each columns || [] as column (column.id)}
-    <td ondblclick={selected}>
+    <td ondblclick={selected} style={`background-color: ${renderedRow['nbr_used'] > 0 ? 'lime' : ''}`}>
       <div data-name="cell-container">
         <p title={renderedRow[column.id]}>{renderedRow[column.id]}</p>
       </div>
