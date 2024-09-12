@@ -11,7 +11,7 @@
   let filteredFilterOptions: IOptions = filter.opts
   let sortedOptions: string[] = $state(filteredFilterOptions.options.sort(sorting))
 
-  $inspect(sortedOptions)
+  // $inspect(sortedOptions)
 
   const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
   const showCategories = async () => (openedFilter = openedFilter === filter.name ? '' : filter.name)

@@ -41,7 +41,7 @@
   let tableOpts = $state<ITableOptions>(tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts)
   let filters: IAthenaFilter[] = $state([])
 
-  let rerender = $state<boolean>(true)
+  let rerender = $state<boolean>(false)
 
   const rowSelected = async (row: Record<string, any>) => {
     if (selectRow) selectRow(row)
@@ -80,7 +80,7 @@
   export const getFilters = () => athenaFilters
   const triggerFetch = () => {
     if (table) {
-      table.render()
+      table.render(false)
       rerender = false
     }
   }
