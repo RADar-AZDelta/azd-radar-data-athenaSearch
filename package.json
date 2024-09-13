@@ -55,7 +55,6 @@
     "vite": "^5.3.2"
   },
   "dependencies": {
-    "@radar-azdelta/svelte-datatable": "^0.0.88",
     "@sveltejs/kit": "^2.5.18"
   },
   "type": "module"

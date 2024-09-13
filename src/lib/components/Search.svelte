@@ -79,13 +79,11 @@
 
   export const getFilters = () => athenaFilters
   const triggerFetch = () => {
-    if (table) {
-      table.render(false)
-      rerender = false
-    }
+    if (!table) return
+    table.render(false)
+    rerender = false
   }
 
-  // TODO: clean this up
   async function setLimitedFilters() {
     if (filters.length) return
 
@@ -94,13 +92,16 @@
     filters = Config.filters.map(filter => {
       switch (filter.name) {
         case 'Domain':
-          filter.options = domains.map(c => c.domain_id)
+          if (!Object.keys(domains).length) filter.options = []
+          else filter.options = domains.map(c => c.domain_id)
           break
         case 'Class':
-          filter.options = conceptClasses.map(d => d.concept_class_id)
+          if (!Object.keys(conceptClasses).length) filter.options = []
+          else filter.options = conceptClasses.map(d => d.concept_class_id)
           break
         case 'Vocab':
-          filter.options = vocabularies.map(v => v.vocabulary_id)
+          if (!Object.keys(vocabularies).length) filter.options = []
+          else filter.options = vocabularies.map(v => v.vocabulary_id)
           break
       }
 
@@ -110,7 +111,6 @@
       filter.options = setFiltersWithLimitation(limitedFilter.options, filter.options, limitedFilter.exclude ?? false)
       return filter
     })
-    updateFilters(athenaFilters)
   }
 
   function addFilterIfNotSetYet(filter: string, value: string) {

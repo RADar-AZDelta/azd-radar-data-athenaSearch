@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import './styles.css'
-  import '../styles/table.scss'
+  import '../lib/styles/table.scss'
 </script>
 
 <div class="app">

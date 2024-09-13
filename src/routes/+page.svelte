@@ -1,8 +1,8 @@
 <!-- Copyright 2023 RADar-AZDelta -->
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
-  import Search from '../components/Search.svelte'
-  import type { ILimitedFilter, ITableFilter } from '../interfaces/Types'
+  import Search from '../lib/components/Search.svelte'
+  import type { ILimitedFilter, ITableFilter } from '../lib/interfaces/Types'
 
   const limitedFilters: ILimitedFilter[] = [
     {
@@ -25,6 +25,9 @@
   let globalFilter: ITableFilter = { column: 'all', filter: 'Andorra' }
 
   // const limitedFilters = []
+  const getVocabularies = async () => ({})
+  const getDomains = async () => ({})
+  const getConceptClasses = async () => ({})
 </script>
 
 <svelte:head>
@@ -42,7 +45,7 @@
   </p>
   <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
-    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} {limitedFilters} bind:globalFilter />
+    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} {limitedFilters} bind:globalFilter {getVocabularies} {getDomains} {getConceptClasses} />
   </div>
 </section>
 

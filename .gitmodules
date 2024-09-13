@@ -1,0 +1,4 @@
+[submodule "libs/azd-radar-dev-datatable"]
+	path = libs/azd-radar-dev-datatable
+	url = git@github.com:RADar-AZDelta/azd-radar-dev-datatable.git
+	branch = master

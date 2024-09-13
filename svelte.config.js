@@ -12,6 +12,9 @@ const config = {
     paths: {
       base: dev ? '' : '/svelte-Athena-search',
     },
+    alias: {
+      "@radar-azdelta/svelte-datatable": "libs/azd-radar-dev-datatable/src/lib"
+    },
     prerender: {
       handleHttpError: 'warn',
     },
