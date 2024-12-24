@@ -14,10 +14,10 @@
 </script>
 
 <div class="concept-choice">
-  {#each expandedViews as view}
-    <button class="concept-choice-button" class:selected={selection === view.viewSlot}>
-      <input type="radio" bind:group={selection} id={view.value} value={view.viewSlot} />
-      <label class="concept-choice-label" for={view.value}>{view.name}</label>
+  {#each expandedViews as { viewSlot, value, name }}
+    <button class="concept-choice-button" class:selected={selection === viewSlot}>
+      <input type="radio" bind:group={selection} id={value} value={viewSlot} />
+      <label class="concept-choice-label" for={value}>{name}</label>
     </button>
   {/each}
 </div>
@@ -38,10 +38,6 @@
     cursor: pointer;
     display: flex;
     padding: 0;
-  }
-
-  .concept-choice-button:has(input[type='radio'].checked) {
-    background-color: #cecece;
   }
 
   .concept-choice-button:hover {

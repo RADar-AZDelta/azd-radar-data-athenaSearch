@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: gpl3+ -->
 <script lang="ts">
   import Search from '../lib/components/Search.svelte'
-  import type { ILimitedFilter, ITableFilter } from '../lib/interfaces/Types'
+  import type { IConceptClass, IDomain, ILimitedFilter, ITableFilter, IVocabulary } from '../lib/interfaces/Types'
 
   const limitedFilters: ILimitedFilter[] = [
     {
@@ -24,10 +24,38 @@
 
   let globalFilter: ITableFilter = { column: 'all', filter: 'Andorra' }
 
-  // const limitedFilters = []
-  const getVocabularies = async () => ({})
-  const getDomains = async () => ({})
-  const getConceptClasses = async () => ({})
+  const getVocabularies = async (): Promise<IVocabulary[]> => {
+    const vocabularies: IVocabulary[] = [
+      {
+        vocabulary_concept_id: 123,
+        vocabulary_id: 'test',
+        vocabulary_name: 'test',
+        vocabulary_reference: 'test',
+        vocabulary_version: 'test',
+      },
+    ]
+    return vocabularies
+  }
+  const getDomains = async (): Promise<IDomain[]> => {
+    const domains: IDomain[] = [
+      {
+        domain_concept_id: 123,
+        domain_id: 'test',
+        domain_name: 'test',
+      },
+    ]
+    return domains
+  }
+  const getConceptClasses = async (): Promise<IConceptClass[]> => {
+    const conceptClasses: IConceptClass[] = [
+      {
+        concept_class_id: 'test',
+        concept_class_name: 'test',
+        concpet_class_concept_id: 123,
+      },
+    ]
+    return conceptClasses
+  }
 </script>
 
 <svelte:head>
@@ -43,7 +71,6 @@
     It uses the <a href="https://www.npmjs.com/package/@radar-azdelta/svelte-datatable">svelte-datatable package</a> (also created by us), that is a easy to use
     and fast table component. This example shows a no config search component.
   </p>
-  <a href="/custom">Another example with custom actions, custom pages & custom sides</a>
   <div class="container">
     <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} {limitedFilters} bind:globalFilter {getVocabularies} {getDomains} {getConceptClasses} />
   </div>

@@ -1,8 +1,10 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
 import Search from './components/Search.svelte'
-import { assembleAthenaURL } from './helpers/utils'
+import AthenaURL from './helpers/AthenaURL'
 import type { IView, ILimitedFilter } from './interfaces/Types'
 
-export { Search, assembleAthenaURL as assembleURL }
+const assembleURL = AthenaURL.assembleAthenaURL.bind(AthenaURL)
+
+export { Search, assembleURL }
 export type { IView, ILimitedFilter }

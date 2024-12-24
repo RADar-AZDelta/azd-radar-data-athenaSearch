@@ -5,41 +5,32 @@
   import SvgIcon from '../components/SvgIcon.svelte'
   import type { IOptions, IAthenaFilterProps } from '../interfaces/Types'
 
-  let { filter, openedFilter = $bindable(), color, facets, athenaFilters, filtering }: IAthenaFilterProps = $props()
+  let { filter, openedFilter = $bindable(), color, athenaFilters, filtering }: IAthenaFilterProps = $props()
 
   let filterInput: string = $state('')
   let filteredFilterOptions: IOptions = filter.opts
+  const sorting = (a: string, b: string) => (a > b ? 1 : -1)
   let sortedOptions: string[] = $state(filteredFilterOptions.options.sort(sorting))
-
-  // $inspect(sortedOptions)
 
   const onChange = debounce(async ({ target }): Promise<void> => updateOptionsFromFilter(target.value), 500)
   const showCategories = async () => (openedFilter = openedFilter === filter.name ? '' : filter.name)
   const removeInputFromFilter = async (): Promise<any> => ((filterInput = ''), (filteredFilterOptions = filter.opts))
 
+  // Filter the shown filters with the typed value
   const updateOptionsFromFilter = async (input: string): Promise<void> => {
     const options = filter.opts.options.filter(op => op.toLowerCase().includes(input.toLowerCase()))
     const { altName, altNameFacet } = filter.opts
-    filteredFilterOptions = { options: options, altName, altNameFacet }
-    sortedOptions = filteredFilterOptions.options.sort(sorting)
+    filteredFilterOptions = { options, altName, altNameFacet }
+    sortedOptions = options.sort(sorting)
   }
 
+  // Check if the filter is active on the filter name or alternative name
   function checkFilter(filter: string, altName: string | undefined, option: string): boolean {
     const chosen = athenaFilters.get(filter) ?? athenaFilters.get(altName ?? '')
     return chosen?.includes(option) ?? false
   }
 
-  function sorting(a: any, b: any) {
-    //const { altNameFacet } = filter.opts
-    // const enableA = facets[altNameFacet].hasOwnProperty(a) && facets[altNameFacet][a] > 0
-    // const enableB = facets[altNameFacet].hasOwnProperty(b) && facets[altNameFacet][b] > 0
-    // if (enableA && !enableB) return -1
-    // else if (!enableA && enableB) return 1
-    // else if (!enableA && !enableB) return 0
-    /*else*/ if (a > b) return 1
-    else return -1
-  }
-
+  // Filter the table with the option (name of option) & alternative name
   function filterTable(e: Event, altName: string, option: string) {
     const checked = (e.target as HTMLInputElement).checked
     filtering(checked, altName, option)
@@ -66,18 +57,12 @@
         </div>
         {#each sortedOptions as option}
           {@const { name } = filter}
-          {@const { altNameFacet, altName } = filter.opts}
+          {@const { altName } = filter.opts}
           {@const title = 'Activate/deactivate filter'}
           {@const checked = checkFilter(name, altName, option)}
           <div class="filter-option">
-            <!-- {#if facets[altNameFacet].hasOwnProperty(option) && facets[altNameFacet][option] > 0} -->
-
             <input class="filter-option-input" id={option} type="checkbox" {title} {checked} onclick={e => filterTable(e, altName, option)} />
             <label class="filter-option-label" for={option}>{option.replaceAll('/', ' / ')}</label>
-            <!-- {:else}
-              <input class="filter-option-input disabled" id={option} type="checkbox" disabled />
-              <label class="filter-option-label disabled" for={option}>{option.replaceAll('/', ' / ')}</label>
-            {/if} -->
           </div>
         {/each}
       </div>
@@ -211,9 +196,5 @@
 
   .filter-option-label {
     max-width: 80%;
-  }
-
-  .disabled {
-    color: lightgray;
   }
 </style>

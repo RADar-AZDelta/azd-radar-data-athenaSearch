@@ -50,17 +50,17 @@
       </button>
     </div>
     <div class="choice-filters">
-      {#each filters as limitedFilter, _}
+      {#each filters as limitedFilter}
         {@const { name, altName, altNameFacet, options } = limitedFilter}
         {#if facets && facets[altNameFacet]}
           {@const filter = { name, opts: { altName, altNameFacet, options } }}
           {@const color = colors[name.toLowerCase()]}
-          <AthenaFilter {filter} bind:openedFilter {color} {facets} {athenaFilters} {filtering} />
+          <AthenaFilter {filter} bind:openedFilter {color} {athenaFilters} {filtering} />
         {/if}
       {/each}
       <div class="activated-filters">
-        {#each athenaFilters as [filter, values], _}
-          {#each values as value, i}
+        {#each athenaFilters as [filter, values]}
+          {#each values as value}
             {@const cantDelete = isFilterDeletable(filter, value)}
             {@const color = colors[filterNames[filter]] ?? 'orange'}
             <div class="activated-filter" id={value} style={`background-color: ${color}`}>

@@ -1,6 +1,6 @@
 //Copyright 2023 RADar-AZDelta
 //SPDX-License-Identifier: gpl3+
-import type { IColumnMetaData, IPagination, ITableOptions, SortDirection, TFilter } from '@radar-azdelta/svelte-datatable'
+import type { IColumnMetaData, IPagination, ITableOptions, SortDirection } from '@radar-azdelta/svelte-datatable'
 import type { Snippet } from 'svelte'
 
 export interface IOptions {
@@ -24,7 +24,6 @@ export interface IAthenaFilterProps {
   filter: IFilter
   openedFilter: string
   color: string
-  facets: Record<string, any>
   athenaFilters: Map<string, string[]>
   filtering: (checked: boolean, filter: string, option: string) => Promise<void>
 }
@@ -48,7 +47,7 @@ export interface IFilterProps {
 
 export interface ISelectionProps {
   views: IView[]
-  changeView: (selection: number) => Promise<void>
+  changeView: (selection: number) => Promise<unknown>
 }
 
 export interface ISvgIconProps {
@@ -89,9 +88,29 @@ export interface ISearchProps {
   firstView?: Snippet
   secondView?: Snippet
   actionChild?: Snippet<[renderedRow: Record<string, any>]>
-  getVocabularies: () => Promise<Record<string, any>>
-  getDomains: () => Promise<Record<string, any>>
-  getConceptClasses: () => Promise<Record<string, any>>
+  getVocabularies: () => Promise<IVocabulary[]>
+  getDomains: () => Promise<IDomain[]>
+  getConceptClasses: () => Promise<IConceptClass[]>
+}
+
+export interface IDomain {
+  domain_id: string
+  domain_name: string
+  domain_concept_id: number
+}
+
+export interface IVocabulary {
+  vocabulary_concept_id: number
+  vocabulary_id: string
+  vocabulary_name: string
+  vocabulary_reference: string
+  vocabulary_version: string
+}
+
+export interface IConceptClass {
+  concpet_class_concept_id: number
+  concept_class_id: string
+  concept_class_name: string
 }
 
 export interface ILimitedFilter {
@@ -106,7 +125,7 @@ export interface IUrlAssembly {
   apiFilters?: string[]
   columns: Record<string, string>
   filter?: string
-  sort?: [string, string]
+  sort?: [string, SortDirection]
   pagination?: IPagination
   autoMap?: boolean
 }

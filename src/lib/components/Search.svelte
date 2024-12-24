@@ -3,8 +3,8 @@
 <script lang="ts">
   import DataTable from '@radar-azdelta/svelte-datatable'
   import Config from '../helpers/Config'
+  import AthenaURL from '../helpers/AthenaURL'
   import Filters from '../components/Filters.svelte'
-  import { assembleAthenaURL } from '../helpers/utils'
   import Selection from '../components/Selection.svelte'
   import AthenaRow from '../components/AthenaRow.svelte'
   import { AthenaDataTypeImpl } from '../helpers/AthenaDataTypeImpl'
@@ -40,45 +40,47 @@
   const defaultTableOpts = Object.assign(Config.defaultTableOptions, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
   let tableOpts = $state<ITableOptions>(tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts)
   let filters: IAthenaFilter[] = $state([])
-
+  let prevGlobalFilter = $state<string | undefined>(undefined)
   let rerender = $state<boolean>(false)
 
-  const rowSelected = async (row: Record<string, any>) => {
+  // Wrapper method for selectRow because it can be undefined
+  const selectRowWrapper = async (row: Record<string, any>) => {
     if (selectRow) selectRow(row)
   }
   const updateFilters = async (filters: Map<string, string[]>) => {
     athenaFilters = new Map([...filters])
     triggerFetch()
   }
-  const selectionChanged = async (selection: number) => {
-    viewSelection = selection
-  }
+  const selectionChanged = async (selection: number) => (viewSelection = selection)
 
   ///////////////////////////////////////////////////////////////////////////////////////////////
   // METHODS
   ///////////////////////////////////////////////////////////////////////////////////////////////
 
-  async function fetchSource(filters: Map<String, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
+  // Wrapper method to fetch content via the custom fetch method or from Athena as alternative
+  async function fetchSource(filters: Map<string, TFilter>, sorts: Map<string, SortDirection>, pagination: IPagination) {
     let filter = tableOpts.globalFilter?.filter?.toString() ?? ''
     const sort = sorts.entries().next().value
+    // If there is a custom fetchData method, use it
     if (fetchData) return await fetchData(filter, Config.columnNames, athenaFilters, sorts, pagination)
+    // Use the Athena fetch logic as alternative
     let apiFilters: string[] = []
     for (let [filter, options] of athenaFilters) {
       const substring = options.map(option => `&${filter}=${option}`).join()
       if (!apiFilters.includes(substring)) apiFilters.push(substring.replaceAll(',', '&'))
     }
-    const url = await assembleAthenaURL({ apiFilters, columns: Config.columnNames, filter, sort, pagination })
-
+    const url = await AthenaURL.assembleAthenaURL({ apiFilters, columns: Config.columnNames, filter, sort, pagination })
     const response = await fetch(url)
     const apiData = await response.json()
     // Save the facets to exclude filters later
     ;({ facets } = apiData)
-    const { content, totalElements } = apiData
-    return { data: content, totalRows: totalElements }
+    const { content: data, totalElements: totalRows } = apiData
+    return { data, totalRows }
   }
 
   export const getFilters = () => athenaFilters
-  const triggerFetch = () => {
+
+  async function triggerFetch() {
     if (!table) return
     table.render(false)
     rerender = false
@@ -86,25 +88,12 @@
 
   async function setLimitedFilters() {
     if (filters.length) return
-
     const [vocabularies, domains, conceptClasses] = await Promise.all([getVocabularies(), getDomains(), getConceptClasses()])
-
     filters = Config.filters.map(filter => {
-      switch (filter.name) {
-        case 'Domain':
-          if (!Object.keys(domains).length) filter.options = []
-          else filter.options = domains.map(c => c.domain_id)
-          break
-        case 'Class':
-          if (!Object.keys(conceptClasses).length) filter.options = []
-          else filter.options = conceptClasses.map(d => d.concept_class_id)
-          break
-        case 'Vocab':
-          if (!Object.keys(vocabularies).length) filter.options = []
-          else filter.options = vocabularies.map(v => v.vocabulary_id)
-          break
-      }
-
+      if (filter.name === 'Domain') filter.options = domains.map(d => d.domain_id)
+      else if (filter.name === 'Class') filter.options = conceptClasses.map(c => c.concept_class_id)
+      else if (filter.name === 'Vocab') filter.options = vocabularies.map(v => v.vocabulary_id)
+      else filter.options = []
       const limitedFilter = limitedFilters.find(f => f.name === filter.name)
       if (!limitedFilter) return filter
       if (limitedFilter.value) addFilterIfNotSetYet(filter.altName, limitedFilter.value)
@@ -127,13 +116,11 @@
     return filteredOptions
   }
 
-  const setFilter = (filter?: string) => {
-    tableOpts.globalFilter!.filter = filter
-    rerender = true
-  }
-
-  const updateGlobalFilter = (opt: ITableOptions) => {
-    if (globalFilter.filter) globalFilter.filter = opt.globalFilter?.filter?.toString() ?? ''
+  async function updateFilter(filter: string, global: boolean) {
+    prevGlobalFilter = filter
+    if (global && tableOpts.globalFilter) tableOpts.globalFilter.filter = filter
+    else if (global) tableOpts.globalFilter = { filter: globalFilter.filter, column: 'all' }
+    else if (!global) globalFilter.filter = filter
   }
 
   $effect(() => {
@@ -145,11 +132,8 @@
   })
 
   $effect(() => {
-    setFilter(globalFilter.filter)
-  })
-
-  $effect(() => {
-    updateGlobalFilter(tableOpts)
+    if (globalFilter?.filter && prevGlobalFilter !== globalFilter.filter) updateFilter(globalFilter.filter, true)
+    else if (tableOpts?.globalFilter && tableOpts?.globalFilter?.filter !== prevGlobalFilter) updateFilter(tableOpts.globalFilter.filter as string, false)
   })
 </script>
 
@@ -173,8 +157,8 @@
         <div class="table-container">
           <DataTable data={fetchSource} columns={Config.columnsAthena} bind:options={tableOpts} bind:this={table}>
             <!-- Issue in getting the type of props from the svelte-datatable package -->
-            {#snippet rowChild(renderedRow: any, originalIndex: any, index: any, columns: any, option: any)}
-              <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={rowSelected} {actionChild} />
+            {#snippet rowChild({ renderedRow, columns })}
+              <AthenaRow {renderedRow} {columns} iconSize={fontSize} selectRow={selectRowWrapper} {actionChild} />
             {/snippet}
           </DataTable>
         </div>
