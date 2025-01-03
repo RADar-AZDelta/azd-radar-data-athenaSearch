@@ -36,7 +36,7 @@
 
   let table: DataTable | undefined = $state()
   let viewSelection: number = $state(0)
-  let athenaFilters = $state(new Map<string, string[]>([['standardConcept', ['Standard']]]))
+  let athenaFilters = $state(new Map<string, string[]>([['standardConcept', ['Standard']], ['invalidReason', ['Valid']]]))
   const defaultTableOpts = Object.assign(Config.defaultTableOptions, { dataTypeImpl: new AthenaDataTypeImpl(), globalFilter })
   let tableOpts = $state<ITableOptions>(tableOptions ? { ...defaultTableOpts, ...tableOptions } : defaultTableOpts)
   let filters: IAthenaFilter[] = $state([])
@@ -93,7 +93,6 @@
       if (filter.name === 'Domain') filter.options = domains.map(d => d.domain_id)
       else if (filter.name === 'Class') filter.options = conceptClasses.map(c => c.concept_class_id)
       else if (filter.name === 'Vocab') filter.options = vocabularies.map(v => v.vocabulary_id)
-      else filter.options = []
       const limitedFilter = limitedFilters.find(f => f.name === filter.name)
       if (!limitedFilter) return filter
       if (limitedFilter.value) addFilterIfNotSetYet(filter.altName, limitedFilter.value)

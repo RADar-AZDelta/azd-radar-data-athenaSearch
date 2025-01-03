@@ -4,23 +4,23 @@
   import Search from '../lib/components/Search.svelte'
   import type { IConceptClass, IDomain, ILimitedFilter, ITableFilter, IVocabulary } from '../lib/interfaces/Types'
 
-  const limitedFilters: ILimitedFilter[] = [
-    {
-      name: 'Concept',
-      value: 'Standard',
-      options: [],
-    },
-    {
-      name: 'Validity',
-      value: 'Valid',
-      options: [],
-    },
-    {
-      name: 'Vocab',
-      options: ['LOINC', 'GGR'],
-      exclude: true,
-    },
-  ]
+  // const limitedFilters: ILimitedFilter[] = [
+  //   {
+  //     name: 'Concept',
+  //     value: 'Standard',
+  //     options: [],
+  //   },
+  //   {
+  //     name: 'Validity',
+  //     value: 'Valid',
+  //     options: [],
+  //   },
+  //   {
+  //     name: 'Vocab',
+  //     options: ['LOINC', 'GGR'],
+  //     exclude: true,
+  //   },
+  // ]
 
   let globalFilter: ITableFilter = { column: 'all', filter: 'Andorra' }
 
@@ -72,7 +72,7 @@
     and fast table component. This example shows a no config search component.
   </p>
   <div class="container">
-    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} {limitedFilters} bind:globalFilter {getVocabularies} {getDomains} {getConceptClasses} />
+    <Search tableOptions={{ rowsPerPageOptions: [10, 20, 100] }} bind:globalFilter {getVocabularies} {getDomains} {getConceptClasses} />
   </div>
 </section>
 
