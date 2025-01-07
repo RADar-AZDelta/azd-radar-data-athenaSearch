@@ -14,8 +14,9 @@ export default class AthenaURL {
 
   private static async addApiFiltersToUrl(url: string, apiFilters: string[] | undefined): Promise<string> {
     if (!apiFilters) return url
-    url += apiFilters.join('&')
-    for (const filter of apiFilters) url += filter
+    const filteredApiFilters = apiFilters.filter(f => f !== '')
+    const uniqueFilters = [...new Set(filteredApiFilters)]
+    url += uniqueFilters.join('&')
     return url
   }
 
